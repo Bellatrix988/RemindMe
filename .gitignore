@@ -1,4 +1,6 @@
-<<<<<<< HEAD
+﻿#folders
+node_modules
+www/vendor
 ﻿# .gitignore
 [Pp]lugins/android.json
 [Pp]lugins/windows.json
@@ -18,4 +20,4 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
->>>>>>> cc242fbbe3d64d7f3db86258d1f4f000d2d5f647
+
