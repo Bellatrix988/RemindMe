@@ -1,6 +1,8 @@
 ﻿#folders
 node_modules
 www/vendor
+www/libs
+
 ﻿# .gitignore
 [Pp]lugins/android.json
 [Pp]lugins/windows.json
