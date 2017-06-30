@@ -1,0 +1,29 @@
+﻿body {
+    background-color:#F2E8C9;
+}
+
+.addForm{
+    position:relative;
+    left:10%;
+    right:10%;
+    top:5%;
+}
+
+.button
+{
+    background-color:#DBDACC;
+    color:#444444;
+}
+
+/*#note_title{
+    min-height:5%;
+    max-height:10%;
+    min-width:80%;
+    max-width:80%;
+}
+
+#note_text{
+    min-width:80%;
+    max-width:80%;
+}*/
+
