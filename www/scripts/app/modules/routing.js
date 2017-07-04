@@ -21,8 +21,7 @@ routingApp.config(function($stateProvider, $urlRouterProvider) {
 
         .state('update', {
             url: '/update',
-            templateUrl: '/html-part/updatePage.html',
-            // controller: 'changeLvl',
+            templateUrl: '/html-part/updatePage.html'
         })
 
         .state('help', {

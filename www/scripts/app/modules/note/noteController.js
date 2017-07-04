@@ -24,7 +24,9 @@ selectWrite = function () {
             for (var i = 0; i < result.rows.length; i++) {
                 arrayH.push(new Note(result.rows.item(i).ID, result.rows.item(i).title, result.rows.item(i).text, result.rows.item(i).set_date));
             }
-            loadNote();
+            console.log("length arrayH " + arrayH.length);
+            console.log(result.rows.length)
+            loadNote(); // копирует значение из вспомогательного массива в массив array
         }, errCallback);
     });
 }
@@ -54,6 +56,18 @@ notesApp.controller("notesAddController", function ($scope) {
         $scope.array.push(new Note(len + 1, title, text, setDate, new Date()));
         $scope.data.typeButton = 'headPage';
         $scope.addToHistory('headPage');
+    };
+
+    $scope.deleteNote = function (id) {
+        dataBase.transaction(function (tx) {
+            tx.executeSql("DELETE FROM dbNotes WHERE ID = ?", [id]);
+        });
+    };
+
+    $scope.deleteAllNote = function () {
+        dataBase.transaction(function (tx) {
+            tx.executeSql("DELETE FROM dbNotes");
+        })
     };
 });
 
@@ -161,7 +175,7 @@ notesApp.controller("notesController", function ($scope) {
 
     $scope.current_date = $scope.viewDate(new Date());
 
-    //вспомогательная переменная для поиска заметки в массиве перед ее обновлением
+    //вспомогательная  переменная для поиска заметки в массиве перед ее обновлением
     var current_note;
 
     $scope.updatePage = function (id, title, text, setDate) {
@@ -246,33 +260,5 @@ notesApp.controller("notesController", function ($scope) {
     }
 
     //удалить заметку
-    $scope.deleteNote = function (id) {
-        dataBase.transaction(function (tx) {
-            tx.executeSql("DELETE FROM dbNotes WHERE ID = ?", [id]);
-        });
-    };
-
-    $scope.deleteAllNote = function () {
-        dataBase.transaction(function (tx) {
-            tx.executeSql("DELETE FROM dbNotes");
-        })
-    };
-});
-
-notesApp.filter('viewDate', function () {
-    return function (date) {
-        var res = convertDate(date, '.');
-        if (res.length > 0) {
-
-        var ind = res.indexOf(',');
-        var now = new Date();
-  
-        if (Math.abs(date.valueOf() - now.valueOf()) <  86400000) {
-            return res.substring(0, ind);
-        } else {
-            var l = res.length;
-            return res.substring(ind+1,l)
-        }
-        }
-    };
+    
 });
