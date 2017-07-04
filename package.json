@@ -28,5 +28,8 @@
   "bugs": {
     "url": "https://github.com/Bellatrix988/RemindMe/issues"
   },
-  "homepage": "https://github.com/Bellatrix988/RemindMe#readme"
+  "homepage": "https://github.com/Bellatrix988/RemindMe#readme",
+  "dependencies": {
+    "autoprefixer": "^7.1.1"
+  }
 }

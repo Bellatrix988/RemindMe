@@ -7,7 +7,7 @@ var rename = require("gulp-rename");
 var autoprefixer = require('gulp-autoprefixer');
 var uglify = require('gulp-uglify');
 var filter = require('gulp-filter');
-var pkg = require('./package.json');
+// var pkg = require('./package.json');
 
 // Compile LESS files from /less into /css
 gulp.task('less', function() {

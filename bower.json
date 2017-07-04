@@ -1,23 +1,24 @@
 {
-  "name": "logical_circuit",
-  "description": "Game-learning with the logical circuit and karnaugh map",
+  "name": "remindme",
+  "description": "The App is a simple \"To-Do List\".",
   "main": "index.js",
   "authors": [
-    "Marina Zakharova"
+    "bellatrix988"
   ],
   "license": "ISC",
-  "homepage": "",
+  "homepage": "https://github.com/Bellatrix988/RemindMe",
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
+    "www/libs",
     "test",
     "tests"
   ],
   "dependencies": {
-    "angular": "^1.6.4",
+    "angular-material": "^1.1.4",
     "angular-ui-router": "^1.0.3",
-    "normalize.less": "^1.0.0",
-    "angular-material": "^1.1.4"
+    "normalize.css": "*",
+    "normalize.less": "^1.0.0"
   }
 }
