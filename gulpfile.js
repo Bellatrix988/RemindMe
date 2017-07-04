@@ -7,7 +7,17 @@ var rename = require("gulp-rename");
 var autoprefixer = require('gulp-autoprefixer');
 var uglify = require('gulp-uglify');
 var filter = require('gulp-filter');
+var browserSyncSpa = require('browser-sync-spa');
+var concat = require('gulp-concat'); //cлияние файлов
 // var pkg = require('./package.json');
+
+gulp.task('merge-css', function() {  
+    return gulp.src('app/css/*.css')
+        .pipe(concat('style.css'))
+        .pipe(gulp.dest('app/css'))
+});
+
+
 
 // Compile LESS files from /less into /css
 gulp.task('less', function() {
@@ -33,9 +43,15 @@ gulp.task('minify-css', ['less'], function() {
         }))
 });
 
+gulp.task('merge-js', function() {  
+    return gulp.src('www/scripts/controllers/**/*.js')
+        .pipe(concat('controllers.js'))
+        .pipe(gulp.dest('www/scripts'))
+});
+
 // Minify JS
-gulp.task('minify-js', function() {
-    return gulp.src('www/js/freelancer.js')
+gulp.task('minify-js', ['merge-js'], function() {
+    return gulp.src('www/scripts/controllers.js')
         .pipe(uglify())
         .pipe(rename({ suffix: '.min' }))
         .pipe(gulp.dest('www/js'))
@@ -64,14 +80,14 @@ gulp.task('copy', function() {
 })
 
 // Run everything
-gulp.task('default', ['less', 'minify-css', 'minify-js', 'copy','browserSync']);
+gulp.task('default', ['less', 'minify-css', 'minify-js', 'copy','dev']);
 
 // Configure the browserSync task
 gulp.task('browserSync', function() {
     //for AngularJS
-    // browserSync.use(browserSyncSpa({
-    //     selector: '[ng-app]'
-    // }));
+    browserSync.use(browserSyncSpa({
+        selector: '[ng-app]'
+    }));
      browserSync({ 
         server: { 
             baseDir: 'www' 
@@ -84,9 +100,9 @@ gulp.task('browserSync', function() {
 gulp.task('dev', ['browserSync', 'less', 'minify-css', 'minify-js'], function() {
     gulp.watch('www/less/*.less', ['less']);
     gulp.watch('www/css/*.css', ['minify-css']);
-    gulp.watch('www/js/*.js', ['minify-js']);
+    gulp.watch('www/scripts/**/*.js', ['minify-js']);
     // Reloads the browser whenever HTML or JS files change
     gulp.watch('www/style.min.css', browserSync.reload);
-    gulp.watch('www/*.html', browserSync.reload);
-    gulp.watch('www/js/**/*.js', browserSync.reload);
+    gulp.watch('www/**/*.html', browserSync.reload); // Наблюдение за HTML файлами в корне проекта
+    gulp.watch('www/scripts/**/*.js', browserSync.reload); // Наблюдение за JS
 });
