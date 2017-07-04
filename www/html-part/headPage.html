@@ -1,25 +1,24 @@
-﻿<div ng-controller="sidenavCtrl" layout="column"  ng-cloak>
+﻿<div ng-controller="sidenavCtrl" layout="column">
     <md-toolbar>
           <div class="md-toolbar-tools">
-            <md-button ng-click="toggleLeft()" class="md-raised">
-                Toggle Sidenav
+            <md-button ng-click="toggleLeft()" class="md-raised" >
+                <i class="fa fa-bars" aria-hidden="true"></i>
             </md-button>
 
-            <md-truncate style="position: absolute; left: 90px; right: 170px; top: 13px; bottom: 13px;">Toolbar with Standard Buttons</md-truncate>
+            <md-truncate>RemindMe</md-truncate>
 
             <span flex></span>
-            <md-button class="md-raised" aria-label="Learn More">
-              Learn More
+            <md-button class="md-fab md-mini" aria-label="delete" ui-sref="delete"> 
+              <i class="fa fa-trash" aria-hidden="true"></i>
             </md-button>
-            <md-button class="md-fab md-mini" aria-label="Favorite">
-              <md-icon md-svg-icon="img/icons/favorite.svg"></md-icon>
+            <md-button class="md-fab md-mini" aria-label="create" ui-sref="create">
+              <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
             </md-button>
           </div>
         </md-toolbar>
   <section layout="row" flex>
-    <md-sidenav class="md-sidenav-left" md-component-id="left"
-                md-disable-backdrop md-whiteframe="4">
-
+    
+    <md-sidenav md-swipe-left="toggleLeft()" class="md-sidenav-left" md-component-id="left" md-disable-backdrop md-whiteframe="4">
       <md-toolbar class="md-theme-indigo">
         <h1 class="md-toolbar-tools">Hello, User!</h1>
       </md-toolbar>
@@ -31,16 +30,52 @@
             <h3>{{ item.text }}</h3>
           </div>
         </md-list-item>
+        <hr>
+        <md-button ng-click="toggleLeft()" class="md-raised">
+            Закрыть
+        </md-button>
       </md-content>
     </md-sidenav>
 
     <md-content flex layout-padding>
       <div layout="column" layout-align="top center">
-        <div>
-          <md-button ng-click="toggleLeft()" class="md-raised">
-            Toggle Sidenav
-          </md-button>
-        </div>
+        <!-- <div><p class="headPage">Сегодня <span ng-bind="current_date"></span><span>, Ближайшие дела:</span></p></div> -->
+        <!-- <button id="helpButton" ng-click="data.typeButton = 'headPage'" hidden ></button> -->
+        <center>
+            <div  ng-switch on="array.length">
+                <div ng-switch-when="0">
+                    <center>
+                        <button class="buttonCreate" ui-sref="create" ng-click="data.typeButton = 'Create'; addToHistory('Create')" value="Create">
+                                <div style="width:100%; height:100%;"><img class="buttonCreate" src="images/notepadCreate.png" /><br /> Добавить заметку</div>
+                        </button>
+                    </center>
+                </div>
+
+                <div ng-switch-default>
+                    <md-list-item class="md-3-line" ng-repeat="item in array | orderBy:sortParamArray" ng-click="updatePage(item.id, item.title, item.text, item.setDate)">
+                      <div class="md-list-item-text" layout="column">
+                            <p width="75%">{{item.title}}</p>
+                            <p width="15%">{{item.setDate | viewDate}}</p>
+                      </div>
+                    </md-list-item>
+
+<!--                             <table id="notesTable" class="table" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <td hidden>Title</td>
+                                        <td hidden>Date</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="notes" ng-repeat="item in array | orderBy:sortParamArray" ng-click="updatePage(item.id, item.title, item.text, item.setDate)">
+                                        <td width="75%">{{item.title}}</td>
+                                        <td width="15%">{{item.setDate | viewDate}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>-->                        
+                </div>
+            </div>
+        </center>
 
       </div>
 
@@ -50,60 +85,3 @@
 
 </div>
 
-
-<!--     <nav class="navbar navbar-default navbar-static">
-    <div class="container-fluid">
-        <div class="navbar-header">
-
-<md-toolbar layout="row" class="md-hue-3">
-  <div class="md-toolbar-tools">
-    <span>Normal</span>
-  </div>
-</md-toolbar>
-            <div class="navbar-brand btn-group" style="float:right;  padding:2% 2%;">
-                <button class="button" ui-sref="delete" ng-click="data.typeButton = 'Delete'; addToHistory('Delete')" value="Delete">delete</button>
-                <button class="button" ui-sref="create" ng-click="data.typeButton = 'Create'; addToHistory('Create')">edit</span></button>
-            </div>
-            <a class="navbar-brand" href="#" style="float:left;">HappyNotes</a>
-        </div>
-    </div>
-</nav>
-<div><p class="headPage">Сегодня {{current_date}}, Ближайшие дела:</p></div>
-<button id="helpButton" ng-click="data.typeButton = 'headPage'" hidden ></button>
-<center>
-<div  ng-switch on="array.length">
-    <div ng-switch-when="0">
-        <center>
-            <button class="buttonCreate" ui-sref="create" ng-click="data.typeButton = 'Create'; addToHistory('Create')" value="Create">
-                    <div style="width:100%; height:100%;"><img class="buttonCreate" src="images/notepadCreate.png" /><br /> Добавить заметку</div>
-                </button>
-        </center>
-    </div>
-
-    <div ng-switch-default>
-                    <md-list-item class="md-3-line" ng-repeat="item in array | orderBy:sortParamArray" ng-click="updatePage(item.id, item.title, item.text, item.setDate)">
-                      <div class="md-list-item-text" layout="column">
-                            <p width="75%">{{item.title}}</p>
-                            <p width="15%">{{item.setDate | viewDate}}</p>
-                      </div>
-                    </md-list-item>
-
-                    <table id="notesTable" class="table" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <td hidden>Title</td>
-                                <td hidden>Date</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="notes" ng-repeat="item in array | orderBy:sortParamArray" ng-click="updatePage(item.id, item.title, item.text, item.setDate)">
-                                <td width="75%">{{item.title}}</td>
-                                <td width="15%">{{item.setDate | viewDate}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-</center>
-
- -->

@@ -1,7 +1,7 @@
 angular.module('designApp')
       .controller('sidenavCtrl', function ($scope, $timeout, $mdSidenav) {
         $scope.toggleLeft = buildToggler('left');
-        $scope.toggleRight = buildToggler('right');
+
          var imagePath = "./../../../../images/notepadCreate.png";
         $scope.todos = [
 	      {
@@ -25,6 +25,7 @@ angular.module('designApp')
 	        text : 'Поддержка'
 	      }
 	    ];
+
         function buildToggler(componentId) {
           return function() {
             $mdSidenav(componentId).toggle();

@@ -1,56 +1,57 @@
 var todoApp = angular.module('todoApp',['routingApp','notesApp','designApp']);
 var routingApp = angular.module('routingApp', ['ui.router']);
 
-routingApp.run(function ($state, $rootScope) {
-        $rootScope.$state = $state;
-});
+    // routingApp.run(function ($state, $rootScope) {
+    //         $rootScope.$state = $state;
+    // });
 
 routingApp.config(function($stateProvider, $urlRouterProvider) {
 
-    $urlRouterProvider.otherwise('/home');
+    $urlRouterProvider.otherwise('createNote');
 
     $stateProvider
         .state('home', {
             url: '/home',
-            templateUrl: '/html-part/headPage.html'
+            templateUrl: './../../../html-part/headPage.html'
         })
 
         .state('createNote',{
             url: '/createNote',
-            templateUrl: '/html-part/createPage.html'
+            template: "CREATE"
+            // templateUrl: './../../../html-part/createPage.html'
         })
 
         .state('update', {
             url: '/update',
-            templateUrl: '/html-part/updatePage.html'
+            templateUrl: './../../../html-part/updatePage.html'
         })
 
         .state('help', {
             url: '/help',
-            templateUrl: '/html-part/headPage.html.html'
+            templateUrl: './../../../html-part/headPage.html.html'
         })
 
         .state('delete', {
           url: '/delete',
-          templateUrl: '/html-part/deletePage.html'
+          templateUrl: './../../../html-part/deletePage.html'
         })
 
         .state('reminder', {
-            url: '/about',
-            templateUrl: '/html-part/reminderPage.html'     
+            url: '/remider',
+            templateUrl: './../../../html-part/reminderPage.html'     
         });
 });
 
  angular.module('designApp', ['ngMaterial'])
 		.config(function($mdThemingProvider) {
 	  		$mdThemingProvider.theme('default')
-	    	.primaryPalette('lime')
-	    	// .accentPalette('orange')
+	    	.primaryPalette('green')
+	    	.accentPalette('grey')
 		})
 angular.module('designApp')
       .controller('sidenavCtrl', function ($scope, $timeout, $mdSidenav) {
         $scope.toggleLeft = buildToggler('left');
-        $scope.toggleRight = buildToggler('right');
+
          var imagePath = "./../../../../images/notepadCreate.png";
         $scope.todos = [
 	      {
@@ -74,6 +75,7 @@ angular.module('designApp')
 	        text : 'РџРѕРґРґРµСЂР¶РєР°'
 	      }
 	    ];
+
         function buildToggler(componentId) {
           return function() {
             $mdSidenav(componentId).toggle();
@@ -185,6 +187,46 @@ init = function () {
 
 var notesApp = angular.module("notesApp", ['ngMaterial']);
 
+var arrayH = [];
+var dataBase = {};
+
+var failure = function () {
+    alert("Error calling MyPlugin");
+}
+var errCallback = function () {
+    alert("Error in DataBase!");
+}
+openDB = function () {
+
+    dataBase = window.openDatabase('dbNotes', '1.0', 'DataBase of Notes', 1024 * 1024 * 5);
+    if (!dataBase) { alert("Failed to connect to database."); }
+
+    dataBase.transaction(function (transaction) {
+        transaction.executeSql("CREATE TABLE IF NOT EXISTS dbNotes (ID INTEGER PRIMARY KEY ASC, title TEXT, text TEXT, set_date DATE, create_date DATE)", [], function () { }, errCallback)
+        console.log("create table ");
+    });
+};
+
+selectWrite = function () {
+    dataBase.transaction(function (tx) {
+        tx.executeSql("SELECT * FROM dbNotes", [], function (tx, result) {
+            for (var i = 0; i < result.rows.length; i++) {
+                arrayH.push(new Note(result.rows.item(i).ID, result.rows.item(i).title, result.rows.item(i).text, result.rows.item(i).set_date));
+            }
+            console.log("length arrayH " + arrayH.length);
+            console.log(result.rows.length)
+            loadNote(); // копирует значение из вспомогательного массива в массив array
+        }, errCallback);
+    });
+}
+
+init = function () {
+    openDB();
+    selectWrite();
+}
+
+var notesApp = angular.module("notesApp", ['ngMaterial']);
+
 notesApp.controller("notesAddController", function ($scope) {
 
     $scope.addNote = function (title, text, setDate) {
@@ -203,18 +245,6 @@ notesApp.controller("notesAddController", function ($scope) {
         $scope.array.push(new Note(len + 1, title, text, setDate, new Date()));
         $scope.data.typeButton = 'headPage';
         $scope.addToHistory('headPage');
-    };
-
-    $scope.deleteNote = function (id) {
-        dataBase.transaction(function (tx) {
-            tx.executeSql("DELETE FROM dbNotes WHERE ID = ?", [id]);
-        });
-    };
-
-    $scope.deleteAllNote = function () {
-        dataBase.transaction(function (tx) {
-            tx.executeSql("DELETE FROM dbNotes");
-        })
     };
 });
 
@@ -322,7 +352,7 @@ notesApp.controller("notesController", function ($scope) {
 
     $scope.current_date = $scope.viewDate(new Date());
 
-    //вспомогательная  переменная для поиска заметки в массиве перед ее обновлением
+    //вспомогательная переменная для поиска заметки в массиве перед ее обновлением
     var current_note;
 
     $scope.updatePage = function (id, title, text, setDate) {
@@ -407,9 +437,36 @@ notesApp.controller("notesController", function ($scope) {
     }
 
     //удалить заметку
-    
+    $scope.deleteNote = function (id) {
+        dataBase.transaction(function (tx) {
+            tx.executeSql("DELETE FROM dbNotes WHERE ID = ?", [id]);
+        });
+    };
+
+    $scope.deleteAllNote = function () {
+        dataBase.transaction(function (tx) {
+            tx.executeSql("DELETE FROM dbNotes");
+        })
+    };
 });
 
+notesApp.filter('viewDate', function () {
+    return function (date) {
+        var res = convertDate(date, '.');
+        if (res.length > 0) {
+
+        var ind = res.indexOf(',');
+        var now = new Date();
+  
+        if (Math.abs(date.valueOf() - now.valueOf()) <  86400000) {
+            return res.substring(0, ind);
+        } else {
+            var l = res.length;
+            return res.substring(ind+1,l)
+        }
+        }
+    };
+});
 
 angular.module("notesApp")
         .filter('viewDate', function () {
