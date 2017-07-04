@@ -1,6 +1,64 @@
+var todoApp = angular.module('todoApp',['routingApp','notesApp','designApp']);
+var routingApp = angular.module('routingApp', ['ui.router']);
 
+routingApp.run(function ($state, $rootScope) {
+        $rootScope.$state = $state;
+});
 
+routingApp.config(function($stateProvider, $urlRouterProvider) {
 
+    $urlRouterProvider.otherwise('/home');
+
+    $stateProvider
+        .state('home', {
+            url: '/home',
+            templateUrl: '/html-part/headPage.html'
+        })
+
+        .state('createNote',{
+            url: '/createNote',
+            templateUrl: '/html-part/createPage.html'
+        })
+
+        .state('update', {
+            url: '/update',
+            templateUrl: '/html-part/updatePage.html',
+            // controller: 'changeLvl',
+        })
+
+        .state('help', {
+            url: '/help',
+            templateUrl: '/html-part/headPage.html.html'
+        })
+
+        .state('delete', {
+          url: '/delete',
+          templateUrl: '/html-part/deletePage.html'
+        })
+
+        .state('reminder', {
+            url: '/about',
+            templateUrl: '/html-part/reminderPage.html'     
+        });
+});
+
+ angular.module('designApp', ['ngMaterial'])
+		.config(function($mdThemingProvider) {
+	  		$mdThemingProvider.theme('default')
+	    	.primaryPalette('lime')
+	    	// .accentPalette('orange')
+		})
+angular.module('designApp')
+      .controller('sidenavCtrl', function ($scope, $timeout, $mdSidenav) {
+        $scope.toggleLeft = buildToggler('left');
+        $scope.toggleRight = buildToggler('right');
+
+        function buildToggler(componentId) {
+          return function() {
+            $mdSidenav(componentId).toggle();
+          };
+        }
+      });
 function Note(id, title, text, setDate,createDate) {
     this.id = id;       //id
     this.title = title; //заголовок
@@ -34,9 +92,7 @@ selectWrite = function () {
             for (var i = 0; i < result.rows.length; i++) {
                 arrayH.push(new Note(result.rows.item(i).ID, result.rows.item(i).title, result.rows.item(i).text, result.rows.item(i).set_date));
             }
-            console.log("length arrayH " + arrayH.length);
-            console.log(result.rows.length)
-            loadNote(); // копирует значение из вспомогательного массива в массив array
+            loadNote();
         }, errCallback);
     });
 }
@@ -288,55 +344,3 @@ notesApp.filter('viewDate', function () {
         }
     };
 });
-var failure = function () {
-    alert("Error calling MyPlugin");
-}
-var errCallback = function () {
-    alert("Error in DataBase!");
-}
-openDB = function () {
-
-    dataBase = window.openDatabase('dbNotes', '1.0', 'DataBase of Notes', 1024 * 1024 * 5);
-    if (!dataBase) { alert("Failed to connect to database."); }
-
-    dataBase.transaction(function (transaction) {
-        transaction.executeSql("CREATE TABLE IF NOT EXISTS dbNotes (ID INTEGER PRIMARY KEY ASC, title TEXT, text TEXT, set_date DATE, create_date DATE)", [], function () { }, errCallback)
-        console.log("create table ");
-    });
-};
-
-selectWrite = function () {
-    dataBase.transaction(function (tx) {
-        tx.executeSql("SELECT * FROM dbNotes", [], function (tx, result) {
-            for (var i = 0; i < result.rows.length; i++) {
-                arrayH.push(new Note(result.rows.item(i).ID, result.rows.item(i).title, result.rows.item(i).text, result.rows.item(i).set_date));
-            }
-            console.log("length arrayH " + arrayH.length);
-            console.log(result.rows.length)
-            loadNote(); // РєРѕРїРёСЂСѓРµС‚ Р·РЅР°С‡РµРЅРёРµ РёР· РІСЃРїРѕРјРѕРіР°С‚РµР»СЊРЅРѕРіРѕ РјР°СЃСЃРёРІР° РІ РјР°СЃСЃРёРІ array
-        }, errCallback);
-    });
-}
-
-init = function () {
-    openDB();
-    selectWrite();
-}
-
- angular.module('designApp', ['ngMaterial'])
-		.config(function($mdThemingProvider) {
-	  		$mdThemingProvider.theme('default')
-	    	.primaryPalette('lime')
-	    	// .accentPalette('orange')
-		})
-angular.module('designApp')
-      .controller('sidenavCtrl', function ($scope, $timeout, $mdSidenav) {
-        $scope.toggleLeft = buildToggler('left');
-        $scope.toggleRight = buildToggler('right');
-
-        function buildToggler(componentId) {
-          return function() {
-            $mdSidenav(componentId).toggle();
-          };
-        }
-      });

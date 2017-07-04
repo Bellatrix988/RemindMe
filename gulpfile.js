@@ -9,7 +9,6 @@ var uglify = require('gulp-uglify');
 var filter = require('gulp-filter');
 var browserSyncSpa = require('browser-sync-spa');
 var concat = require('gulp-concat'); //cлияние файлов
-// var pkg = require('./package.json');
 
 gulp.task('merge-css', function() {  
     return gulp.src('app/css/*.css')
@@ -44,14 +43,14 @@ gulp.task('minify-css', ['less'], function() {
 });
 
 gulp.task('merge-js', function() {  
-    return gulp.src('www/scripts/controllers/**/*.js')
-        .pipe(concat('controllers.js'))
+    return gulp.src(['www/scripts/app/app.js','www/scripts/app/modules/*.js','www/scripts/app/modules/**/*.js'])
+        .pipe(concat('app-s.js'))
         .pipe(gulp.dest('www/scripts'))
 });
 
 // Minify JS
 gulp.task('minify-js', ['merge-js'], function() {
-    return gulp.src('www/scripts/controllers.js')
+    return gulp.src(['www/scripts/*.js'])
         .pipe(uglify())
         .pipe(rename({ suffix: '.min' }))
         .pipe(gulp.dest('www/js'))
