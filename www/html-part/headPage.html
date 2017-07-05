@@ -54,12 +54,12 @@
                 <div ng-switch-default>
                     <md-list-item class="md-3-line" ng-repeat="item in array | orderBy:sortParamArray" ng-click="updatePage(item.id, item.title, item.text, item.setDate)">
                       <div class="md-list-item-text" layout="column">
-                            <p width="75%">{{item.title}}</p>
-                            <p width="15%">{{item.setDate | viewDate}}</p>
+                            <p width="75%" ng-bind="item.title"></p>
+                            <p width="15%" ng-bind=" viewDate(item.setDate)  |  date:'dd.MM.yyyy' "></p>
                       </div>
                     </md-list-item>
 
-<!--                             <table id="notesTable" class="table" cellspacing="0">
+                <!--<table id="notesTable" class="table" cellspacing="0">
                                 <thead>
                                     <tr>
                                         <td hidden>Title</td>
@@ -72,7 +72,7 @@
                                         <td width="15%">{{item.setDate | viewDate}}</td>
                                     </tr>
                                 </tbody>
-                            </table>-->                        
+                    </table>-->                        
                 </div>
             </div>
         </center>

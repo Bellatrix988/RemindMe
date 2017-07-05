@@ -7,38 +7,37 @@ var routingApp = angular.module('routingApp', ['ui.router']);
 
 routingApp.config(function($stateProvider, $urlRouterProvider) {
 
-    $urlRouterProvider.otherwise('createNote');
+    $urlRouterProvider.otherwise('home');
 
     $stateProvider
         .state('home', {
             url: '/home',
-            templateUrl: './../../../html-part/headPage.html'
+            templateUrl: '../../../html-part/headPage.html'
         })
 
-        .state('createNote',{
-            url: '/createNote',
-            template: "CREATE"
-            // templateUrl: './../../../html-part/createPage.html'
+        .state('create',{
+            url: '/create',
+            templateUrl: '../../../html-part/createPage.html'
         })
 
         .state('update', {
             url: '/update',
-            templateUrl: './../../../html-part/updatePage.html'
+            templateUrl: '../../../html-part/updatePage.html'
         })
 
         .state('help', {
             url: '/help',
-            templateUrl: './../../../html-part/headPage.html.html'
+            templateUrl: '../../../html-part/headPage.html'
         })
 
         .state('delete', {
           url: '/delete',
-          templateUrl: './../../../html-part/deletePage.html'
+          templateUrl: '../../../html-part/checkNotes.html'
         })
 
         .state('reminder', {
             url: '/remider',
-            templateUrl: './../../../html-part/reminderPage.html'     
+            templateUrl: '../../../html-part/reminderPage.html'     
         });
 });
 
@@ -225,6 +224,18 @@ init = function () {
     selectWrite();
 }
 
+function insertTODO(title, text, setDate){
+    dataBase.transaction(function (tx) {
+        tx.executeSql("INSERT INTO dbNotes (title, text, set_date, create_date) VALUES (?,?,?,?)", [title, text, setDate, new Date()]);
+    });
+}
+
+function updateTODO(title, text, setDate, id) {
+    dataBase.transaction(function (tx) {
+        tx.executeSql("UPDATE dbNotes SET title = ?, text = ?, set_date = ? WHERE ID = ?", [title, text, setDate, id]);
+    });
+}
+
 var notesApp = angular.module("notesApp", ['ngMaterial']);
 
 notesApp.controller("notesAddController", function ($scope) {
@@ -237,21 +248,37 @@ notesApp.controller("notesAddController", function ($scope) {
                 var p = text.substring(0, text.length);
             title = p;
         }
-        dataBase.transaction(function (tx) {
-            tx.executeSql("INSERT INTO dbNotes (title, text, set_date, create_date) VALUES (?,?,?,?)", [title, text, setDate, new Date()]);
-        });
+
+        insertTODO(title, text, setDate);
 
         var len = $scope.array.length;
         $scope.array.push(new Note(len + 1, title, text, setDate, new Date()));
         $scope.data.typeButton = 'headPage';
         $scope.addToHistory('headPage');
     };
+
+    $scope.updateNote = function (id, title, text, setDate) {
+        var index = $scope.array.indexOf(current_note);
+        if (title == null) {
+            if (text.length >= 15)
+                var p = text.substring(0, 15) + "...";
+            else
+                var p = text.substring(0, text.length);
+            title = p;
+        }
+        
+        updateTODO(title, text, setDate, id);
+
+        $scope.array.splice(index, 1, new Note(id, title, text, setDate));
+        $scope.data.typeButton = 'headPage';
+        $scope.addToHistory('headPage');
+    };
+
 });
 
 notesApp.controller("notesController", function ($scope) {
     $scope.array = [];
     $scope.sortParamArray = 'setDate';
-    //настойка динамического представления страниц
     $scope.data = {};
 
     $scope.setFile = function () {
@@ -336,17 +363,17 @@ notesApp.controller("notesController", function ($scope) {
 
     $scope.arrayHisty = ['headPage'];
 
-    convertDate = function (date, delim) {
+    $scope.viewDate = function (date) {
+        convertDate = function (date, delim) {
         if (date === null || date === undefined || isNaN(date))
             return "";
         else {
-            var res = (date.getHours() < 10 ? '0' +date.getHours() : date.getHours()) + ':' + (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ', ' + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + delim + (date.getUTCMonth() + 1 < 10 ? '0' + (date.getUTCMonth() + 1).toString() : (date.getUTCMonth()+1).toString()) + delim + date.getFullYear();
-            return res;
+            // var res = (date.getHours() < 10 ? '0' +date.getHours() : date.getHours()) + ':' + (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ', ' + (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + delim + (date.getUTCMonth() + 1 < 10 ? '0' + (date.getUTCMonth() + 1).toString() : (date.getUTCMonth()+1).toString()) + delim + date.getFullYear();
+            // return res;
+            return new Date(date);
 
         }
     }
-    
-    $scope.viewDate = function (date) {
         return convertDate(date, '.');
     }
 
@@ -375,22 +402,7 @@ notesApp.controller("notesController", function ($scope) {
         $scope.MYnote_set_date = setDate;
     }
 
-    $scope.updateNote = function (id, title, text, setDate) {
-        var index = $scope.array.indexOf(current_note);
-        if (title == null) {
-            if (text.length >= 15)
-                var p = text.substring(0, 15) + "...";
-            else
-                var p = text.substring(0, text.length);
-            title = p;
-        }
-        dataBase.transaction(function (tx) {
-            tx.executeSql("UPDATE dbNotes SET title = ?, text = ?, set_date = ? WHERE ID = ?", [title, text, setDate, id]);
-        });
-        $scope.array.splice(index, 1, new Note(id, title, text, setDate));
-        $scope.data.typeButton = 'headPage';
-        $scope.addToHistory('headPage');
-    };
+
 
     var index;
     getNoteID = function (id) {

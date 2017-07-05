@@ -6,37 +6,36 @@ var routingApp = angular.module('routingApp', ['ui.router']);
 
 routingApp.config(function($stateProvider, $urlRouterProvider) {
 
-    $urlRouterProvider.otherwise('createNote');
+    $urlRouterProvider.otherwise('home');
 
     $stateProvider
         .state('home', {
             url: '/home',
-            templateUrl: './../../../html-part/headPage.html'
+            templateUrl: '../../../html-part/headPage.html'
         })
 
-        .state('createNote',{
-            url: '/createNote',
-            template: "CREATE"
-            // templateUrl: './../../../html-part/createPage.html'
+        .state('create',{
+            url: '/create',
+            templateUrl: '../../../html-part/createPage.html'
         })
 
         .state('update', {
             url: '/update',
-            templateUrl: './../../../html-part/updatePage.html'
+            templateUrl: '../../../html-part/updatePage.html'
         })
 
         .state('help', {
             url: '/help',
-            templateUrl: './../../../html-part/headPage.html.html'
+            templateUrl: '../../../html-part/headPage.html'
         })
 
         .state('delete', {
           url: '/delete',
-          templateUrl: './../../../html-part/deletePage.html'
+          templateUrl: '../../../html-part/checkNotes.html'
         })
 
         .state('reminder', {
             url: '/remider',
-            templateUrl: './../../../html-part/reminderPage.html'     
+            templateUrl: '../../../html-part/reminderPage.html'     
         });
 });
