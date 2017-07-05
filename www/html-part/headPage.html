@@ -8,14 +8,14 @@
             <md-truncate>RemindMe</md-truncate>
 
             <span flex></span>
-            <md-button class="md-fab md-mini" aria-label="delete" ui-sref="delete"> 
+            <md-button  ng-click="data.typeButton = 'Delete'; addToHistory('Delete')" class="md-fab md-mini" aria-label="delete" ui-sref="delete"> 
               <i class="fa fa-trash" aria-hidden="true"></i>
             </md-button>
-            <md-button class="md-fab md-mini" aria-label="create" ui-sref="create">
+            <md-button ng-click="data.typeButton = 'Create'; addToHistory('Create')" class="md-fab md-mini" aria-label="create" ui-sref="create">
               <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
             </md-button>
           </div>
-        </md-toolbar>
+    </md-toolbar>
   <section layout="row" flex>
     
     <md-sidenav md-swipe-left="toggleLeft()" class="md-sidenav-left" md-component-id="left" md-disable-backdrop md-whiteframe="4">
@@ -39,8 +39,6 @@
 
     <md-content flex layout-padding>
       <div layout="column" layout-align="top center">
-        <!-- <div><p class="headPage">Сегодня <span ng-bind="current_date"></span><span>, Ближайшие дела:</span></p></div> -->
-        <!-- <button id="helpButton" ng-click="data.typeButton = 'headPage'" hidden ></button> -->
         <center>
             <div  ng-switch on="array.length">
                 <div ng-switch-when="0">
@@ -50,38 +48,17 @@
                         </button>
                     </center>
                 </div>
-
                 <div ng-switch-default>
                     <md-list-item class="md-3-line" ng-repeat="item in array | orderBy:sortParamArray" ng-click="updatePage(item.id, item.title, item.text, item.setDate)">
                       <div class="md-list-item-text" layout="column">
-                            <p width="75%" ng-bind="item.title"></p>
+                            <p width="75%" ng-bind="item.title | limitTo:15"></p>
                             <p width="15%" ng-bind=" viewDate(item.setDate)  |  date:'dd.MM.yyyy' "></p>
                       </div>
                     </md-list-item>
-
-                <!--<table id="notesTable" class="table" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <td hidden>Title</td>
-                                        <td hidden>Date</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="notes" ng-repeat="item in array | orderBy:sortParamArray" ng-click="updatePage(item.id, item.title, item.text, item.setDate)">
-                                        <td width="75%">{{item.title}}</td>
-                                        <td width="15%">{{item.setDate | viewDate}}</td>
-                                    </tr>
-                                </tbody>
-                    </table>-->                        
                 </div>
             </div>
         </center>
-
       </div>
-
     </md-content>
-
   </section>
-
 </div>
-
