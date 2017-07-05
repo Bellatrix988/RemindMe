@@ -1,18 +1,19 @@
 angular.module("notesApp", []);
 angular.module("notesApp")
-       .factory('baseOperOfNotes', function(){
+       .factory('baseDB', function(){
            return {
                 insert: function (title, text, setDate) {
                     if(!title)
                         title = text.substring(0, 15) + "...";
                     insertTODO(title, text, setDate);
-                    //$scope.array.push(new Note($scope.array.length + 1, title, text, setDate, new Date()));
-                    // $scope.data.typeButton = 'headPage';
-                    // $scope.addToHistory('headPage');
+                },
+                update: function(title, text, setDate, id){
+                    updateTODO(title, text, setDate, id);
                 },
                 delete: function(id){
                     deleteTODO(id);
                 }
+
            };
        })
        .controller("baseOperOfNotesCTRL", function ($scope) {
@@ -82,12 +83,10 @@ angular.module("notesApp")
                 }
             }
        })
-       .controller("notesController", ['$scope','baseOperOfNotes', function ($scope, baseOperOfNotes) {
+       .controller("notesController", ['$scope','baseDB', function ($scope, baseDB) {
             $scope.array = [];
             $scope.sortParamArray = 'setDate';
             $scope.data = {};
-
-            $scope.baseDB = baseOperOfNotes;
 
             $scope.setFile = function () {
                 if ($scope.data.typeButton == 'Create')
@@ -204,34 +203,16 @@ angular.module("notesApp")
                 }
             }
 
+            //Delete checked notes
             $scope.deleteChekedNotes = function () {
-                for (var k = 0; k < $scope.arrayDeleted.length; k++) {
-                    //$scope.deleteNote($scope.arrayDeleted[k]);
-                    $scope.baseDB.delete($scope.arrayDeleted[k]);
-                    var ind = $scope.array.indexOf(getNoteID($scope.arrayDeleted[k]));
+                $scope.arrayDeleted.forEach(function(item){
+                    baseDB.delete(item);
+                    var ind = $scope.array.indexOf(getNoteID(item));
                     $scope.array.splice(ind, 1);
-                }
+                })
 
                 $scope.arrayDeleted.splice(0, $scope.arrayDeleted.length);
-                $scope.data.typeButton = 'headPage';
-                $scope.addToHistory('headPage');
+                // $scope.data.typeButton = 'headPage';
+                // $scope.addToHistory('headPage');
             }
         }]);
-
-      //   .filter('viewDate', function () {
-      //       return function (date) {
-      //       var res = convertDate(date, '.');
-      //       if (res.length > 0) {
-
-      //       var ind = res.indexOf(',');
-      //       var now = new Date();
-      
-      //       if (Math.abs(date.valueOf() - now.valueOf()) <  86400000) {
-      //           return res.substring(0, ind);
-      //       } else {
-      //           var l = res.length;
-      //           return res.substring(ind+1,l)
-      //       }
-      //       }
-      //       };
-      // });
