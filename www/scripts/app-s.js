@@ -157,12 +157,22 @@ init = function () {
 //endregion
 angular.module("notesApp", []);
 angular.module("notesApp")
-       .factory('notesDB', ['', function(){
-           return function name(){
-               
+       .factory('baseOperOfNotes', function(){
+           return {
+                insert: function (title, text, setDate) {
+                    if(!title)
+                        title = text.substring(0, 15) + "...";
+                    insertTODO(title, text, setDate);
+                    //$scope.array.push(new Note($scope.array.length + 1, title, text, setDate, new Date()));
+                    // $scope.data.typeButton = 'headPage';
+                    // $scope.addToHistory('headPage');
+                },
+                delete: function(id){
+                    deleteTODO(id);
+                }
            };
-       }])
-       .controller("baseOperOfNotes", function ($scope) {
+       })
+       .controller("baseOperOfNotesCTRL", function ($scope) {
 
             $scope.addNote = function (title, text, setDate) {
                 if(!title)
@@ -229,10 +239,12 @@ angular.module("notesApp")
                 }
             }
        })
-       .controller("notesController", function ($scope) {
+       .controller("notesController", ['$scope','baseOperOfNotes', function ($scope, baseOperOfNotes) {
             $scope.array = [];
             $scope.sortParamArray = 'setDate';
             $scope.data = {};
+
+            $scope.baseDB = baseOperOfNotes;
 
             $scope.setFile = function () {
                 if ($scope.data.typeButton == 'Create')
@@ -351,7 +363,8 @@ angular.module("notesApp")
 
             $scope.deleteChekedNotes = function () {
                 for (var k = 0; k < $scope.arrayDeleted.length; k++) {
-                    $scope.deleteNote($scope.arrayDeleted[k]);
+                    //$scope.deleteNote($scope.arrayDeleted[k]);
+                    $scope.baseDB.delete($scope.arrayDeleted[k]);
                     var ind = $scope.array.indexOf(getNoteID($scope.arrayDeleted[k]));
                     $scope.array.splice(ind, 1);
                 }
@@ -360,7 +373,7 @@ angular.module("notesApp")
                 $scope.data.typeButton = 'headPage';
                 $scope.addToHistory('headPage');
             }
-        })
+        }]);
 
       //   .filter('viewDate', function () {
       //       return function (date) {
