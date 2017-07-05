@@ -14,12 +14,13 @@
         </tr>
     </tbody>
 </table> -->
-
-<md-list-item ng-repeat="item in array">
+<section ng-controller="notesController" ng-init="initNotes">
+    <md-list-item ng-repeat="item in array">
     <md-checkbox ng-click="addToArray(item.id)"></md-checkbox>
     <p>{{item.title}}</p>
   </md-list-item>
 
 
     <md-button class="md-raised" value="save" ng-click="deleteChekedNotes()">Удалить</md-button>
-    <md-button class="md-raised" ng-click="onBackKeyDown()" value="back">Назад</md-button>
+    <md-button class="md-raised" onclick="history.back()" value="back">Назад</md-button>
+</section>

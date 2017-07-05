@@ -157,8 +157,6 @@ function Note(id, title, text, setDate,createDate) {
     this.setDate = new Date(setDate); //дата, до которой нужно выполнить дело
     this.createDate = new Date(createDate);
 }
-
-
 var arrayH = [];
 var dataBase = {};
 
@@ -200,6 +198,19 @@ init = function () {
 }
 
 //region Methods for DataBase
+
+    function selectTODO(){
+        var res = [];
+        dataBase.transaction(function (tx) {
+            tx.executeSql("SELECT * FROM dbNotes", [], function(tx,result){
+                result.rows.forEach(function(item){
+                    res.push(new Note(item.ID, item.title, item.text, item.setDate));
+                })
+            });
+        });
+        return res;
+    }
+
     function insertTODO(title, text, setDate){
         dataBase.transaction(function (tx) {
             tx.executeSql("INSERT INTO dbNotes (title, text, set_date, create_date) VALUES (?,?,?,?)", [title, text, setDate, new Date()]);
@@ -228,6 +239,9 @@ angular.module("notesApp", []);
 angular.module("notesApp")
        .factory('baseDB', function(){
            return {
+                select: function(){
+                    return selectTODO();
+                },
                 insert: function (title, text, setDate) {
                     if(!title)
                         title = text.substring(0, 15) + "...";
@@ -281,7 +295,26 @@ angular.module("notesApp")
             };
         })
        .controller("mobileOper", function($scope){
-
+            onBackButtonDown = function () {
+                $scope.$apply(function () {
+                    if ($scope.data.typeButton == 'headPage')
+                    {
+                        navigator.notification.confirm(
+                            'Press back again to exit'
+                          , function (button) {
+                              if (button == 2 || button == 0) {
+                                  navigator.app.exitApp();
+                              }
+                          }
+                          , 'Exit App?'
+                          , ['No way', 'Exit']);
+                        return false;
+                    }
+                    else
+                        $scope.data.typeButton = $scope.popHistory();
+                })
+            };
+            
             $scope.setNotify = function (_id, _title, _text, _time) {
                 //if (window.plugins.device.platform != 'Android')
                 //    exit;
@@ -311,8 +344,24 @@ angular.module("notesApp")
        })
        .controller("notesController", ['$scope','baseDB', function ($scope, baseDB) {
             $scope.array = [];
+            // $scope.array = [new Note(666, "Hello", "000", new Date()), new Note(667, "Hello1", "000", new Date())];
             $scope.sortParamArray = 'setDate';
             $scope.data = {};
+
+            $scope.addNote = function (title, text, setDate){
+                baseDB.insert(title, text, setDate);
+                $scope.array.push(new Note($scope.array.length+1, title, text, setDate));
+            }
+
+            $scope.initNotes = function(){
+                // $scope.array = [new Note(666, "Hello", "000", new Date())];
+                $scope.array = baseDB.select();
+                console.log("WOW");
+                $scope.$apply(function () {
+                    $scope.array = baseDB.select();
+                    console.log("WOW");
+                });
+            }
 
             $scope.setFile = function () {
                 if ($scope.data.typeButton == 'Create')
@@ -327,28 +376,7 @@ angular.module("notesApp")
                     return 'html-part/headPage.html';
                 }
                 else
-                    return 'headPage.html';
-            };
-             
-            
-            onBackButtonDown = function () {
-                $scope.$apply(function () {
-                    if ($scope.data.typeButton == 'headPage')
-                    {
-                        navigator.notification.confirm(
-                            'Press back again to exit'
-                          , function (button) {
-                              if (button == 2 || button == 0) {
-                                  navigator.app.exitApp();
-                              }
-                          }
-                          , 'Exit App?'
-                          , ['No way', 'Exit']);
-                        return false;
-                    }
-                    else
-                        $scope.data.typeButton = $scope.popHistory();
-                })
+                    return 'html-part/headPage.html';
             };
 
             $scope.onBackKeyDown = function () {
@@ -438,11 +466,8 @@ angular.module("notesApp")
                 })
 
                 $scope.arrayDeleted.splice(0, $scope.arrayDeleted.length);
-                // $scope.data.typeButton = 'headPage';
-                // $scope.addToHistory('headPage');
             }
         }]);
-
 angular.module("notesApp")
         .filter('viewDate', function () {
     return function (date) {

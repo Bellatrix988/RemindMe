@@ -1,5 +1,3 @@
-
-
 var arrayH = [];
 var dataBase = {};
 
@@ -41,6 +39,19 @@ init = function () {
 }
 
 //region Methods for DataBase
+
+    function selectTODO(){
+        var res = [];
+        dataBase.transaction(function (tx) {
+            tx.executeSql("SELECT * FROM dbNotes", [], function(tx,result){
+                result.rows.forEach(function(item){
+                    res.push(new Note(item.ID, item.title, item.text, item.setDate));
+                })
+            });
+        });
+        return res;
+    }
+
     function insertTODO(title, text, setDate){
         dataBase.transaction(function (tx) {
             tx.executeSql("INSERT INTO dbNotes (title, text, set_date, create_date) VALUES (?,?,?,?)", [title, text, setDate, new Date()]);

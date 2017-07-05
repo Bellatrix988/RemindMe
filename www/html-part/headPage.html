@@ -17,8 +17,7 @@
           </div>
     </md-toolbar>
   <section layout="row" flex>
-    
-    <md-sidenav md-swipe-left="toggleLeft()" class="md-sidenav-left" md-component-id="left" md-disable-backdrop md-whiteframe="4">
+    <md-sidenav  md-swipe-left="toggleLeft()" class="md-sidenav-left" md-component-id="left" md-disable-backdrop md-whiteframe="4">
       <md-toolbar class="md-theme-indigo">
         <h1 class="md-toolbar-tools">Hello, User!</h1>
       </md-toolbar>
@@ -36,11 +35,10 @@
         </md-button>
       </md-content>
     </md-sidenav>
-
     <md-content flex layout-padding>
-      <div layout="column" layout-align="top center">
-        <center>
-            <div  ng-switch on="array.length">
+      <div ng-controller="notesController" layout="column" layout-align="top center">
+        <center ng-init="initNotes">
+            <div ng-switch on="array.length">
                 <div ng-switch-when="0">
                     <center>
                         <button class="buttonCreate" ui-sref="create" ng-click="data.typeButton = 'Create'; addToHistory('Create')" value="Create">
@@ -49,7 +47,7 @@
                     </center>
                 </div>
                 <div ng-switch-default>
-                    <md-list-item class="md-3-line" ng-repeat="item in array | orderBy:sortParamArray" ng-click="updatePage(item.id, item.title, item.text, item.setDate)">
+                    <md-list-item class="md-3-line" ng-repeat="item in array | orderBy:sortParamArray" ng-click="updatePage(item.id, item.title, item.text, item.setDate)" ui-sref="update">
                       <div class="md-list-item-text" layout="column">
                             <p width="75%" ng-bind="item.title | limitTo:15"></p>
                             <p width="15%" ng-bind=" viewDate(item.setDate)  |  date:'dd.MM.yyyy' "></p>
@@ -61,4 +59,7 @@
       </div>
     </md-content>
   </section>
+  <md-button  ng-click="data.typeButton = 'Create'; addToHistory('Create')" class="md-fab md-primary md-hue-2" aria-label="create" ui-sref="create" md-direction="left">
+              <i class="fa fa-plus" aria-hidden="true" ></i>
+  </md-button>
 </div>
