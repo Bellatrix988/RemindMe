@@ -6,7 +6,7 @@ var routingApp = angular.module('routingApp', ['ui.router']);
 
 routingApp.config(function($stateProvider, $urlRouterProvider) {
 
-    $urlRouterProvider.otherwise('home');
+    $urlRouterProvider.otherwise('uodate');
 
     $stateProvider
         .state('home', {

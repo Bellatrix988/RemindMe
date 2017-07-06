@@ -113,11 +113,13 @@ angular.module("notesApp")
 
             $scope.addNote = function (title, text, setDate){
                 baseDB.insert(title, text, setDate);
-                $scope.array.push(new Note($scope.array.length+1, title, text, setDate));
+                $scope.array = baseDB.select();
             }
-
+            $scope.updateNote = function(title, text, setDate, id){
+                baseDB.update(title, text, setDate, id);
+                $scope.array = baseDB.select();
+            }
             $scope.initNotes = function(){
-                // $scope.array = [new Note(666, "Hello", "000", new Date())];
                 $scope.array = baseDB.select();
                 console.log("WOW");
                 $scope.$apply(function () {
