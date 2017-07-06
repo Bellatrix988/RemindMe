@@ -43,12 +43,13 @@ init = function () {
     function selectTODO(){
         var res = [];
         dataBase.transaction(function (tx) {
-            tx.executeSql("SELECT * FROM dbNotes", [], function(tx,result){
-                result.rows.forEach(function(item){
-                    res.push(new Note(item.ID, item.title, item.text, item.setDate));
-                })
-            });
+            tx.executeSql("SELECT * FROM dbNotes", [], function (tx, result) {
+                for (var i = 0; i < result.rows.length; i++) {
+                    res.push(new Note(result.rows.item(i).ID, result.rows.item(i).title, result.rows.item(i).text, result.rows.item(i).set_date));
+                }
+            }, errCallback);
         });
+        // res = arrayH.slice(0);
         return res;
     }
 

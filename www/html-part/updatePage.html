@@ -1,4 +1,4 @@
-﻿<div ng-controller="notesAddController">
+﻿<!-- <div ng-controller="notesAddController">
     <form>
         <div class="navbar navbar-default navbar-static">
             <div class="container-fluid">
@@ -36,6 +36,35 @@
             <button type="submit" value="save" ng-click="updateNote(MYID, MYnote_title, MYnote_text, MYnote_set_date)">Сохранить</button>
             <button ng-click="onBackKeyDown()" value="back">Назад</button>
         </div>
-        <!-- <input type="button" ng-click="deleteAllNote()" value="Delete">-->
+        <input type="button" ng-click="deleteAllNote()" value="Delete">
     </form>
+</div> -->
+
+<div ng-controller="BottomSheetExample" layout="column" ng-cloak class="md-inline-form">
+  <md-content layout-padding>
+    <div>
+      <form name="noteForm">
+        <!-- section head -->
+        <div ng-controller="notesController">
+            <!-- input for title -->
+            <md-input-container style="position: relative;" flex="100" class="md-block">
+              <label>Заголовок</label>
+              <input ng-bind="note_text" ng-model="note_title">
+            </md-input-container>
+            
+        </div>
+        <!-- section notes text -->
+        <md-input-container class="md-block">
+          <label>Заметка</label>
+          <textarea id="textBody" ng-model="note.text" ng-minlength="1" placeholder="Что нужно сделать..." autofocus md-maxlength="1000" rows="9" md-select-on-focus></textarea>
+        </md-input-container>
+      </form>
+    </div>
+    <div class="buttonBottom" >
+        <md-button class="md-raised" type="submit" value="save" ng-click="addNote(note_title,note_text,note_set_date)" ui-sref="home">Сохранить</md-button>
+        <!-- ng-click="onBackKeyDown()" -->
+        <md-button class="md-raised" onclick="history.back()"  value="back">Назад</md-button>
+        <md-button class="md-primary md-fab md-fab-bottom-right" ng-click="showListBottomSheet()"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></md-button>
+    </div>
+  </md-content>
 </div>

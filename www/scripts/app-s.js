@@ -7,7 +7,7 @@ var routingApp = angular.module('routingApp', ['ui.router']);
 
 routingApp.config(function($stateProvider, $urlRouterProvider) {
 
-    $urlRouterProvider.otherwise('uodate');
+    $urlRouterProvider.otherwise('home');
 
     $stateProvider
         .state('home', {
@@ -41,7 +41,7 @@ routingApp.config(function($stateProvider, $urlRouterProvider) {
         });
 });
 
- angular.module('designApp', ['ngMaterial'])
+ angular.module('designApp', ["ngMaterial", "ngAnimate", "ngAria","mdPickers"])
 		.config(function($mdThemingProvider) {
 	  		$mdThemingProvider.theme('default')
 	    	.primaryPalette('green')
@@ -51,6 +51,29 @@ angular.module('designApp')
        .controller('formCtrl', function($scope) {
           
        })
+angular.module('designApp')
+       .controller('reminderCtrl', ['$scope','$mdpDatePicker', '$mdpTimePicker', function($scope, $mdpDatePicker, $mdpTimePicker){
+	       	$scope.currentDate = new Date();
+		  	this.showDatePicker = function(ev) {
+		    	$mdpDatePicker($scope.currentDate, {
+		        targetEvent: ev
+		      }).then(function(selectedDate) {
+		        $scope.currentDate = selectedDate;
+		      });;
+		    };
+		    
+		    this.filterDate = function(date) {
+		      return moment(date).date() % 2 == 0;
+		    };
+		    
+		    this.showTimePicker = function(ev) {
+		    	$mdpTimePicker($scope.currentTime, {
+		        targetEvent: ev
+		      }).then(function(selectedDate) {
+		        $scope.currentTime = selectedDate;
+		      });;
+		    } 
+       }]);
 angular.module('designApp')
       .controller('sidenavCtrl', function ($scope, $timeout, $mdSidenav) {
         $scope.toggleLeft = buildToggler('left');
@@ -86,7 +109,6 @@ angular.module('designApp')
         }
       });
 angular.module('designApp')
-   
 	.controller('BottomSheetExample', function($scope, $timeout, $mdBottomSheet, $mdToast) {
 	  $scope.alert = '';
 
@@ -101,7 +123,6 @@ angular.module('designApp')
 	    });
 	  };
 	})
-
 	.controller('ListBottomSheetCtrl', function($scope, $mdBottomSheet) {
 	  $scope.items = [
 	    { name: 'Добавить напоминание', icon: 'fa fa-clock-o', fucClick: "", src: "reminder" },
@@ -166,12 +187,13 @@ init = function () {
     function selectTODO(){
         var res = [];
         dataBase.transaction(function (tx) {
-            tx.executeSql("SELECT * FROM dbNotes", [], function(tx,result){
-                result.rows.forEach(function(item){
-                    res.push(new Note(item.ID, item.title, item.text, item.setDate));
-                })
-            });
+            tx.executeSql("SELECT * FROM dbNotes", [], function (tx, result) {
+                for (var i = 0; i < result.rows.length; i++) {
+                    res.push(new Note(result.rows.item(i).ID, result.rows.item(i).title, result.rows.item(i).text, result.rows.item(i).set_date));
+                }
+            }, errCallback);
         });
+        // res = arrayH.slice(0);
         return res;
     }
 
@@ -219,6 +241,13 @@ angular.module("notesApp")
                 }
 
            };
+       })
+       .factory('noteUP', function(){
+            return {
+                getNote: function(title, text, setDate, id){
+                    return new Note(id, title, text, setDate);
+                }
+            }
        })
        .controller("baseOperOfNotesCTRL", function ($scope) {
 
@@ -306,26 +335,26 @@ angular.module("notesApp")
                 }
             }
        })
-       .controller("notesController", ['$scope','baseDB', function ($scope, baseDB) {
+       .controller("notesController", ['$scope','baseDB','noteUP', function ($scope, baseDB, noteUP) {
             $scope.array = [];
             // $scope.array = [new Note(666, "Hello", "000", new Date()), new Note(667, "Hello1", "000", new Date())];
             $scope.sortParamArray = 'setDate';
             $scope.data = {};
-
             $scope.addNote = function (title, text, setDate){
                 baseDB.insert(title, text, setDate);
                 $scope.array = baseDB.select();
             }
             $scope.updateNote = function(title, text, setDate, id){
+                $scope.note = noteUP.getNote(title, text, setDate, id);
                 baseDB.update(title, text, setDate, id);
                 $scope.array = baseDB.select();
             }
             $scope.initNotes = function(){
                 $scope.array = baseDB.select();
-                console.log("WOW");
+                // console.log("WOW");
                 $scope.$apply(function () {
-                    $scope.array = baseDB.select();
-                    console.log("WOW");
+                    // $scope.array = baseDB.select();
+                    // console.log("WOW");
                 });
             }
 
@@ -351,6 +380,7 @@ angular.module("notesApp")
 
             loadNote = function () {
                 $scope.$apply(function () {
+                    $scope.array = baseDB.select();
                     $scope.array = arrayH.slice(0);
                     console.log("Watch");
                     $scope.data.typeButton = 'headPage';

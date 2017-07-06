@@ -1,17 +1,30 @@
-﻿        <div layout-gt-xs="row">
-          <md-input-container>
-            <label>Enter date</label>
-            <md-datepicker ng-model="user.submissionDate"></md-datepicker>
-          </md-input-container>
+﻿<md-content id="content" layout="column" flex ng-controller="reminderCtrl as ctrl">
+  <md-content flex layout="column" layout-align="center center" layout-padding>
+    <div layout="row">
+          <div layout-padding>
+              <mdp-date-picker mdp-placeholder="Date" ng-model="MYnote_set_date"></mdp-date-picker>
+          </div>
+          <div layout-padding>
+              <mdp-time-picker class="nativetimepicker" mdp-placeholder="Time" ng-model="MYnote_set_date"></mdp-time-picker>
+          </div>
         </div>
+  </md-content>
+  <div ng-controller="notesController">
+        <md-button class="md-raised" type="submit" value="save" ng-click="updateNote(MYID,MYnote_title, MYnote_text, MYnote_set_date)" ui-sref="home">Update</md-button>
+        <md-button class="md-raised" type="submit" value="save" ng-click="setNotify(MYID,MYnote_title, MYnote_text, MYnote_set_date)" ui-sref="home">SetNotify</md-button>
+        <md-button class="md-raised" onclick="history.back()"  value="back">Назад</md-button>
+    </div>
+</md-content>
+
+<!-- 
     <span>Установить дату</span>
     <input type="date" class="nativedatepicker" ng-model="MYnote_set_date" placeholder="Установить дату..." /><br />
     <span>Установить время</span>
-    <input type="time" class="nativetimepicker" ng-model="MYnote_set_date" placeholder="Установить дату..." />
-
+    <input type="time" class="nativetimepicker" ng-model="MYnote_set_date" placeholder="Установить дату..." /> -->
+<!-- 
     <div class="buttonBottom">
         <button type="submit" value="save" ng-click="updateNote(MYID,MYnote_title, MYnote_text, MYnote_set_date);">iii</button>
         <button type="submit" value="save" ng-click="setNotify(MYID,MYnote_title, MYnote_text, MYnote_set_date);">Сохранить</button>
         <button ng-click="onBackKeyDown()" value="back">Назад</button>
-    </div>
+    </div> -->
  <!--updateNote(MYID, MYnote_title, MYnote_text, MYnote_set_date);--> 

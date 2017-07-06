@@ -1,4 +1,4 @@
- angular.module('designApp', ['ngMaterial'])
+ angular.module('designApp', ["ngMaterial", "ngAnimate", "ngAria","mdPickers"])
 		.config(function($mdThemingProvider) {
 	  		$mdThemingProvider.theme('default')
 	    	.primaryPalette('green')

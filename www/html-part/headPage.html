@@ -11,9 +11,9 @@
             <md-button  ng-click="data.typeButton = 'Delete'; addToHistory('Delete')" class="md-fab md-mini" aria-label="delete" ui-sref="delete" data-ui-sref-opts="{reload:true}"> 
               <i class="fa fa-trash" aria-hidden="true"></i>
             </md-button>
-            <md-button ng-click="data.typeButton = 'Create'; addToHistory('Create')" class="md-fab md-mini" aria-label="create" ui-sref="create">
+            <!-- <md-button ng-click="data.typeButton = 'Create'; addToHistory('Create')" class="md-fab md-mini" aria-label="create" ui-sref="create">
               <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-            </md-button>
+            </md-button> -->
           </div>
     </md-toolbar>
   <section layout="row" flex>
@@ -60,8 +60,11 @@
     </md-content>
   </section>
   <div>
-    <md-button style="position: fixed; float: right; " ng-click="data.typeButton = 'Create'; addToHistory('Create')" class="md-fab md-primary md-hue-2" aria-label="create" ui-sref="create" md-direction="left">
-                <i class="fa fa-plus" aria-hidden="true" ></i>
+  <md-button class="md-fab md-fab-bottom-right" aria-label="Add a category">
+  
+  </md-button>
+    <md-button ng-cloack style="position: fixed !important;" ng-click="data.typeButton = 'Create'; addToHistory('Create')" class="md-fab md-fab-bottom-right md-primary md-hue-2" ui-sref="create">
+        <i class="fa fa-plus" aria-hidden="true" ></i>
     </md-button>
   </div>
 </div>

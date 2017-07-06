@@ -32,6 +32,7 @@
   },
   "homepage": "https://github.com/Bellatrix988/RemindMe#readme",
   "dependencies": {
-    "autoprefixer": "^7.1.1"
+    "autoprefixer": "^7.1.1",
+    "md-pickers": "^1.1.0"
   }
 }

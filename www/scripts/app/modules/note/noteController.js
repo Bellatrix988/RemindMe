@@ -19,6 +19,13 @@ angular.module("notesApp")
 
            };
        })
+       .factory('noteUP', function(){
+            return {
+                getNote: function(title, text, setDate, id){
+                    return new Note(id, title, text, setDate);
+                }
+            }
+       })
        .controller("baseOperOfNotesCTRL", function ($scope) {
 
             $scope.addNote = function (title, text, setDate) {
@@ -105,26 +112,26 @@ angular.module("notesApp")
                 }
             }
        })
-       .controller("notesController", ['$scope','baseDB', function ($scope, baseDB) {
+       .controller("notesController", ['$scope','baseDB','noteUP', function ($scope, baseDB, noteUP) {
             $scope.array = [];
             // $scope.array = [new Note(666, "Hello", "000", new Date()), new Note(667, "Hello1", "000", new Date())];
             $scope.sortParamArray = 'setDate';
             $scope.data = {};
-
             $scope.addNote = function (title, text, setDate){
                 baseDB.insert(title, text, setDate);
                 $scope.array = baseDB.select();
             }
             $scope.updateNote = function(title, text, setDate, id){
+                $scope.note = noteUP.getNote(title, text, setDate, id);
                 baseDB.update(title, text, setDate, id);
                 $scope.array = baseDB.select();
             }
             $scope.initNotes = function(){
                 $scope.array = baseDB.select();
-                console.log("WOW");
+                // console.log("WOW");
                 $scope.$apply(function () {
-                    $scope.array = baseDB.select();
-                    console.log("WOW");
+                    // $scope.array = baseDB.select();
+                    // console.log("WOW");
                 });
             }
 
@@ -150,6 +157,7 @@ angular.module("notesApp")
 
             loadNote = function () {
                 $scope.$apply(function () {
+                    $scope.array = baseDB.select();
                     $scope.array = arrayH.slice(0);
                     console.log("Watch");
                     $scope.data.typeButton = 'headPage';

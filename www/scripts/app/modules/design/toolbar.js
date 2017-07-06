@@ -1,5 +1,4 @@
 angular.module('designApp')
-   
 	.controller('BottomSheetExample', function($scope, $timeout, $mdBottomSheet, $mdToast) {
 	  $scope.alert = '';
 
@@ -14,7 +13,6 @@ angular.module('designApp')
 	    });
 	  };
 	})
-
 	.controller('ListBottomSheetCtrl', function($scope, $mdBottomSheet) {
 	  $scope.items = [
 	    { name: 'Добавить напоминание', icon: 'fa fa-clock-o', fucClick: "", src: "reminder" },
