@@ -1,4 +1,4 @@
-angular.module("notesApp", []);
+angular.module("notesApp", ['routingApp']);
 angular.module("notesApp")
        .factory('baseDB', function(){
            return {
@@ -84,7 +84,6 @@ angular.module("notesApp")
                 }
                 //called when changing notes
                 $scope.updateNote = function(title, text, setDate, id){
-                    $scope.note = noteUP.getNote(title, text, setDate, id);
                     baseDB.update(title, text, setDate, id);
                 }
 
@@ -127,27 +126,25 @@ angular.module("notesApp")
                 }
                 $scope.current_date = $scope.viewDate(new Date());
             //endregion
-            
-            var current_note;
-            $scope.updatePage = function (id, title, text, setDate) {
-                current_note = getNoteID(id);
-                $scope.data.typeButton = 'Update';
-                $scope.addToHistory('Update');
-                $scope.MYID = id;
-                $scope.MYnote_title = title;
-                $scope.MYnote_text = text;
-                $scope.MYnote_set_date = setDate;
-            }
 
-            $scope.reminderPage = function (id, title, text, setDate) {
-                current_note = getNoteID(id);
-                $scope.data.typeButton = 'Reminder';
-                $scope.addToHistory('Reminder');
-                $scope.MYID = id;
-                $scope.MYnote_title = title;
-                $scope.MYnote_text = text;
-                $scope.MYnote_set_date = setDate;
-            }
+            // var current_note;
+            // $scope.updatePage = function (id, title, text, setDate) {
+            //     $scope.note = new Note(id, title, text, setDate );;
+            //     $scope.noteRR = new Note(id, title, text, setDate );
+            //     current_note = getNoteID(id);
+            //     $scope.MYID = id;
+            //     $scope.MYnote_title = title;
+            //     $scope.MYnote_text = text;
+            //     $scope.MYnote_set_date = setDate;
+            // }
+
+            // $scope.reminderPage = function (id, title, text, setDate) {
+            //     current_note = getNoteID(id);
+            //     $scope.MYID = id;
+            //     $scope.MYnote_title = title;
+            //     $scope.MYnote_text = text;
+            //     $scope.MYnote_set_date = setDate;
+            // }
 
             var index;
             getNoteID = function (id) {

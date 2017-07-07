@@ -1,15 +1,14 @@
 var todoApp = angular.module('todoApp',['routingApp','notesApp','designApp']);
-var routingApp = angular.module('routingApp', ['ui.router', 'notesApp']);
+var routingApp = angular.module('routingApp', ['ui.router']);
 
     // routingApp.run(function ($state, $rootScope) {
     //         $rootScope.$state = $state;
     // });
-
+routingApp.controller("updateCtrl",function($stateParams, $scope){
+    $scope.note = $stateParams.note;
+})
 routingApp.config(function($stateProvider, $urlRouterProvider) {
-routingApp.run(function ($state, $rootScope) {
-        $rootScope.$state = $state;
-        // loadNote();
-});
+
     $urlRouterProvider.otherwise('home');
 
     $stateProvider
@@ -25,7 +24,11 @@ routingApp.run(function ($state, $rootScope) {
 
         .state('update', {
             url: '/update',
-            templateUrl: '../../../html-part/updatePage.html'
+            templateUrl: '../../../html-part/updatePage.html',
+            controller: 'updateCtrl',
+            params:{
+                note: Object
+            }
         })
 
         .state('help', {
@@ -177,7 +180,7 @@ selectWrite = function () {
             for (var i = 0; i < result.rows.length; i++) {
                 arrayH.push(new Note(result.rows.item(i).ID, result.rows.item(i).title, result.rows.item(i).text, result.rows.item(i).set_date));
             }
-            loadNote(); // êîïèðóåò çíà÷åíèå èç âñïîìîãàòåëüíîãî ìàññèâà â ìàññèâ array
+            loadNote();
         }, errCallback);
     });
 }
@@ -217,7 +220,7 @@ init = function () {
         selectWrite();
     }
 //endregion
-angular.module("notesApp", []);
+angular.module("notesApp", ['routingApp']);
 angular.module("notesApp")
        .factory('baseDB', function(){
            return {
@@ -303,7 +306,6 @@ angular.module("notesApp")
                 }
                 //called when changing notes
                 $scope.updateNote = function(title, text, setDate, id){
-                    $scope.note = noteUP.getNote(title, text, setDate, id);
                     baseDB.update(title, text, setDate, id);
                 }
 
@@ -346,27 +348,25 @@ angular.module("notesApp")
                 }
                 $scope.current_date = $scope.viewDate(new Date());
             //endregion
-            
-            var current_note;
-            $scope.updatePage = function (id, title, text, setDate) {
-                current_note = getNoteID(id);
-                $scope.data.typeButton = 'Update';
-                $scope.addToHistory('Update');
-                $scope.MYID = id;
-                $scope.MYnote_title = title;
-                $scope.MYnote_text = text;
-                $scope.MYnote_set_date = setDate;
-            }
 
-            $scope.reminderPage = function (id, title, text, setDate) {
-                current_note = getNoteID(id);
-                $scope.data.typeButton = 'Reminder';
-                $scope.addToHistory('Reminder');
-                $scope.MYID = id;
-                $scope.MYnote_title = title;
-                $scope.MYnote_text = text;
-                $scope.MYnote_set_date = setDate;
-            }
+            // var current_note;
+            // $scope.updatePage = function (id, title, text, setDate) {
+            //     $scope.note = new Note(id, title, text, setDate );;
+            //     $scope.noteRR = new Note(id, title, text, setDate );
+            //     current_note = getNoteID(id);
+            //     $scope.MYID = id;
+            //     $scope.MYnote_title = title;
+            //     $scope.MYnote_text = text;
+            //     $scope.MYnote_set_date = setDate;
+            // }
+
+            // $scope.reminderPage = function (id, title, text, setDate) {
+            //     current_note = getNoteID(id);
+            //     $scope.MYID = id;
+            //     $scope.MYnote_title = title;
+            //     $scope.MYnote_text = text;
+            //     $scope.MYnote_set_date = setDate;
+            // }
 
             var index;
             getNoteID = function (id) {

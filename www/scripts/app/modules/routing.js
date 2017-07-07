@@ -1,14 +1,13 @@
-var routingApp = angular.module('routingApp', ['ui.router', 'notesApp']);
+var routingApp = angular.module('routingApp', ['ui.router']);
 
     // routingApp.run(function ($state, $rootScope) {
     //         $rootScope.$state = $state;
     // });
-
+routingApp.controller("updateCtrl",function($stateParams, $scope){
+    $scope.note = $stateParams.note;
+})
 routingApp.config(function($stateProvider, $urlRouterProvider) {
-routingApp.run(function ($state, $rootScope) {
-        $rootScope.$state = $state;
-        // loadNote();
-});
+
     $urlRouterProvider.otherwise('home');
 
     $stateProvider
@@ -24,7 +23,11 @@ routingApp.run(function ($state, $rootScope) {
 
         .state('update', {
             url: '/update',
-            templateUrl: '../../../html-part/updatePage.html'
+            templateUrl: '../../../html-part/updatePage.html',
+            controller: 'updateCtrl',
+            params:{
+                note: Object
+            }
         })
 
         .state('help', {

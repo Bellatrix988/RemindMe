@@ -39,18 +39,20 @@
             <div ng-switch on="array.length">
                 <div ng-switch-when="0">
                     <center>
-                        <button class="buttonCreate" ui-sref="create" ng-click="data.typeButton = 'Create'; addToHistory('Create')" value="Create">
+                        <button class="buttonCreate" ui-sref="create"  value="Create">
                                 <div style="width:100%; height:100%;"><img class="buttonCreate" src="images/notepadCreate.png" /><br /> Добавить заметку</div>
                         </button>
                     </center>
                 </div>
                 <div ng-switch-default>
-                    <md-list-item class="md-3-line" ng-repeat="item in array | orderBy:sortParamArray" ng-click="updatePage(item.id, item.title, item.text, item.setDate)" ui-sref="update">
+                    <md-list-item class="md-3-line" ng-repeat="item in array | orderBy:sortParamArray"  ui-sref="update({note: item})">
+                      <p ng-bind="note.title"></p>
                       <div class="md-list-item-text" layout="column">
                             <p width="75%" ng-bind="item.title | limitTo:15"></p>
                             <p width="15%" ng-bind=" viewDate(item.setDate)  |  date:'dd.MM.yyyy' "></p>
                       </div>
                     </md-list-item>
+
                 </div>
             </div>
         </center>

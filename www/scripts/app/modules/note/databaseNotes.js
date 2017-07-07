@@ -27,7 +27,7 @@ selectWrite = function () {
             for (var i = 0; i < result.rows.length; i++) {
                 arrayH.push(new Note(result.rows.item(i).ID, result.rows.item(i).title, result.rows.item(i).text, result.rows.item(i).set_date));
             }
-            loadNote(); // êîïèðóåò çíà÷åíèå èç âñïîìîãàòåëüíîãî ìàññèâà â ìàññèâ array
+            loadNote();
         }, errCallback);
     });
 }
