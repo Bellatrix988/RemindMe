@@ -1,17 +1,21 @@
-var routingApp = angular.module('routingApp', ['ui.router']);
+var routingApp = angular.module('routingApp', ['ui.router', 'notesApp']);
 
     // routingApp.run(function ($state, $rootScope) {
     //         $rootScope.$state = $state;
     // });
 
 routingApp.config(function($stateProvider, $urlRouterProvider) {
-
+routingApp.run(function ($state, $rootScope) {
+        $rootScope.$state = $state;
+        // loadNote();
+});
     $urlRouterProvider.otherwise('home');
 
     $stateProvider
         .state('home', {
             url: '/home',
-            templateUrl: '../../../html-part/headPage.html'
+            templateUrl: '../../../html-part/headPage.html',
+            controller: 'notesController'
         })
 
         .state('create',{
@@ -31,7 +35,7 @@ routingApp.config(function($stateProvider, $urlRouterProvider) {
 
         .state('delete', {
           url: '/delete',
-          templateUrl: '../../../html-part/checkNotes.html'
+          templateUrl: '../../../html-part/checkNotes.html',
         })
 
         .state('reminder', {

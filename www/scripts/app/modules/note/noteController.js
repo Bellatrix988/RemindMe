@@ -114,27 +114,22 @@ angular.module("notesApp")
        })
        .controller("notesController", ['$scope','baseDB','noteUP', function ($scope, baseDB, noteUP) {
             $scope.array = [];
-            // $scope.array = [new Note(666, "Hello", "000", new Date()), new Note(667, "Hello1", "000", new Date())];
             $scope.sortParamArray = 'setDate';
             $scope.data = {};
+            //called when adding notes
             $scope.addNote = function (title, text, setDate){
                 baseDB.insert(title, text, setDate);
-                $scope.array = baseDB.select();
             }
+            //called when changing notes
             $scope.updateNote = function(title, text, setDate, id){
                 $scope.note = noteUP.getNote(title, text, setDate, id);
                 baseDB.update(title, text, setDate, id);
                 $scope.array = baseDB.select();
             }
-            $scope.initNotes = function(){
-                $scope.array = baseDB.select();
-                // console.log("WOW");
-                $scope.$apply(function () {
-                    // $scope.array = baseDB.select();
-                    // console.log("WOW");
-                });
-            }
 
+            $scope.initNotes = function(){
+                $scope.array = arrayH.slice(0);
+            }
             $scope.setFile = function () {
                 if ($scope.data.typeButton == 'Create')
                     return 'html-part/createPage.html';
@@ -154,13 +149,10 @@ angular.module("notesApp")
             $scope.onBackKeyDown = function () {
                 $scope.data.typeButton = $scope.popHistory();
             };
-
+            //called when loading database
             loadNote = function () {
                 $scope.$apply(function () {
-                    $scope.array = baseDB.select();
                     $scope.array = arrayH.slice(0);
-                    console.log("Watch");
-                    $scope.data.typeButton = 'headPage';
                 });
             };
 

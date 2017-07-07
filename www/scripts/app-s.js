@@ -1,18 +1,22 @@
 var todoApp = angular.module('todoApp',['routingApp','notesApp','designApp']);
-var routingApp = angular.module('routingApp', ['ui.router']);
+var routingApp = angular.module('routingApp', ['ui.router', 'notesApp']);
 
     // routingApp.run(function ($state, $rootScope) {
     //         $rootScope.$state = $state;
     // });
 
 routingApp.config(function($stateProvider, $urlRouterProvider) {
-
+routingApp.run(function ($state, $rootScope) {
+        $rootScope.$state = $state;
+        // loadNote();
+});
     $urlRouterProvider.otherwise('home');
 
     $stateProvider
         .state('home', {
             url: '/home',
-            templateUrl: '../../../html-part/headPage.html'
+            templateUrl: '../../../html-part/headPage.html',
+            controller: 'notesController'
         })
 
         .state('create',{
@@ -32,7 +36,7 @@ routingApp.config(function($stateProvider, $urlRouterProvider) {
 
         .state('delete', {
           url: '/delete',
-          templateUrl: '../../../html-part/checkNotes.html'
+          templateUrl: '../../../html-part/checkNotes.html',
         })
 
         .state('reminder', {
@@ -146,10 +150,10 @@ var arrayH = [];
 var dataBase = {};
 
 var failure = function () {
-    alert("Error calling MyPlugin");
+    console.log("Error calling MyPlugin");
 }
 var errCallback = function () {
-    alert("Error in DataBase!");
+    console.log("Error in DataBase!");
 }
 
 //Открывает существующую или создает новую
@@ -165,13 +169,12 @@ openDB = function () {
 
 //выбирает все записи из базы и записывает их в массив
 selectWrite = function () {
+    arrayH = [];
     dataBase.transaction(function (tx) {
         tx.executeSql("SELECT * FROM dbNotes", [], function (tx, result) {
             for (var i = 0; i < result.rows.length; i++) {
                 arrayH.push(new Note(result.rows.item(i).ID, result.rows.item(i).title, result.rows.item(i).text, result.rows.item(i).set_date));
             }
-            console.log("length arrayH " + arrayH.length);
-            console.log(result.rows.length)
             loadNote(); // êîïèðóåò çíà÷åíèå èç âñïîìîãàòåëüíîãî ìàññèâà â ìàññèâ array
         }, errCallback);
     });
@@ -185,40 +188,45 @@ init = function () {
 //region Methods for DataBase
 
     function selectTODO(){
-        var res = [];
+        // var res = [];
         dataBase.transaction(function (tx) {
             tx.executeSql("SELECT * FROM dbNotes", [], function (tx, result) {
                 for (var i = 0; i < result.rows.length; i++) {
-                    res.push(new Note(result.rows.item(i).ID, result.rows.item(i).title, result.rows.item(i).text, result.rows.item(i).set_date));
+                    arrayH.push(new Note(result.rows.item(i).ID, result.rows.item(i).title, result.rows.item(i).text, result.rows.item(i).set_date));
                 }
+                console.log("selectTODO RES: ", res);
+                // return res;
             }, errCallback);
         });
-        // res = arrayH.slice(0);
-        return res;
+
     }
 
     function insertTODO(title, text, setDate){
         dataBase.transaction(function (tx) {
             tx.executeSql("INSERT INTO dbNotes (title, text, set_date, create_date) VALUES (?,?,?,?)", [title, text, setDate, new Date()]);
         });
+        selectWrite();
     }
 
     function updateTODO(title, text, setDate, id) {
         dataBase.transaction(function (tx) {
             tx.executeSql("UPDATE dbNotes SET title = ?, text = ?, set_date = ? WHERE ID = ?", [title, text, setDate, id]);
         });
+        selectWrite();
     }
 
     function deleteTODO(id) {
         dataBase.transaction(function (tx) {
             tx.executeSql("DELETE FROM dbNotes WHERE ID = ?", [id]);
         });
+        selectWrite();
     }
 
     function deleteAllTODO() {
         dataBase.transaction(function (tx) {
             tx.executeSql("DELETE FROM dbNotes");
         });
+        selectWrite();
     }
 //endregion
 angular.module("notesApp", []);
@@ -337,27 +345,22 @@ angular.module("notesApp")
        })
        .controller("notesController", ['$scope','baseDB','noteUP', function ($scope, baseDB, noteUP) {
             $scope.array = [];
-            // $scope.array = [new Note(666, "Hello", "000", new Date()), new Note(667, "Hello1", "000", new Date())];
             $scope.sortParamArray = 'setDate';
             $scope.data = {};
+            //called when adding notes
             $scope.addNote = function (title, text, setDate){
                 baseDB.insert(title, text, setDate);
-                $scope.array = baseDB.select();
             }
+            //called when changing notes
             $scope.updateNote = function(title, text, setDate, id){
                 $scope.note = noteUP.getNote(title, text, setDate, id);
                 baseDB.update(title, text, setDate, id);
                 $scope.array = baseDB.select();
             }
-            $scope.initNotes = function(){
-                $scope.array = baseDB.select();
-                // console.log("WOW");
-                $scope.$apply(function () {
-                    // $scope.array = baseDB.select();
-                    // console.log("WOW");
-                });
-            }
 
+            $scope.initNotes = function(){
+                $scope.array = arrayH.slice(0);
+            }
             $scope.setFile = function () {
                 if ($scope.data.typeButton == 'Create')
                     return 'html-part/createPage.html';
@@ -377,13 +380,10 @@ angular.module("notesApp")
             $scope.onBackKeyDown = function () {
                 $scope.data.typeButton = $scope.popHistory();
             };
-
+            //called when loading database
             loadNote = function () {
                 $scope.$apply(function () {
-                    $scope.array = baseDB.select();
                     $scope.array = arrayH.slice(0);
-                    console.log("Watch");
-                    $scope.data.typeButton = 'headPage';
                 });
             };
 

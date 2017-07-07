@@ -14,7 +14,7 @@
         </tr>
     </tbody>
 </table> -->
-<section ng-controller="notesController" ng-init="initNotes">
+<section ng-controller="notesController" ng-init="initNotes()">
     <md-list-item ng-repeat="item in array">
     <md-checkbox ng-click="addToArray(item.id)"></md-checkbox>
     <p>{{item.title}}</p>
