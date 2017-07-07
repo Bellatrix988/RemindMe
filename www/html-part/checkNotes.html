@@ -1,26 +1,10 @@
-﻿<!-- <table id="notesTable" class="display table" cellspacing="0" width="100%">
-    <thead>
-        <tr>
-            <td hidden>check</td>
-            <td hidden>Title</td>
-            <td hidden>Date</td>
-        </tr>
-    </thead>
-    <tbody>
-        <tr ng-repeat="item in array">
-            <td id="checkNote"><input ng-click="addToArray(item.id)" type="checkbox" /></td>
-            <td>{{item.title}}</td>
-            <td ng-bind="viewDate(item.setDate)"></td>
-        </tr>
-    </tbody>
-</table> -->
-<section ng-controller="notesController" ng-init="initNotes()">
+﻿<section ng-controller="notesController" ng-init="initNotes()">
     <md-list-item ng-repeat="item in array">
     <md-checkbox ng-click="addToArray(item.id)"></md-checkbox>
     <p>{{item.title}}</p>
   </md-list-item>
 
 
-    <md-button class="md-raised" value="save" ng-click="deleteChekedNotes()">Удалить</md-button>
+    <md-button class="md-raised" value="save" ng-click="removeNotes()" onclick="history.back()">Удалить</md-button>
     <md-button class="md-raised" onclick="history.back()" value="back">Назад</md-button>
 </section>

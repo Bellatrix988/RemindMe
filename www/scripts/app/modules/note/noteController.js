@@ -26,44 +26,6 @@ angular.module("notesApp")
                 }
             }
        })
-       .controller("baseOperOfNotesCTRL", function ($scope) {
-
-            $scope.addNote = function (title, text, setDate) {
-                if(!title)
-                    title = text.substring(0, 15) + "...";
-                
-                insertTODO(title, text, setDate);
-
-                $scope.array.push(new Note($scope.array.length + 1, title, text, setDate, new Date()));
-                // $scope.data.typeButton = 'headPage';
-                // $scope.addToHistory('headPage');
-            };
-
-            $scope.updateNote = function (id, title, text, setDate) {
-                var index = $scope.array.indexOf(current_note);
-                if (title == null) {
-                    if (text.length >= 15)
-                        var p = text.substring(0, 15) + "...";
-                    else
-                        var p = text.substring(0, text.length);
-                    title = p;
-                }
-                
-                updateTODO(title, text, setDate, id);
-
-                $scope.array.splice(index, 1, new Note(id, title, text, setDate));
-                $scope.data.typeButton = 'headPage';
-                $scope.addToHistory('headPage');
-            };
-
-            $scope.deleteNote = function (id) {
-                deleteTODO(id);
-            };
-
-            $scope.deleteAllNote = function () {
-                deleteAllTODO();
-            };
-        })
        .controller("mobileOper", function($scope){
             onBackButtonDown = function () {
                 $scope.$apply(function () {
@@ -114,63 +76,63 @@ angular.module("notesApp")
        })
        .controller("notesController", ['$scope','baseDB','noteUP', function ($scope, baseDB, noteUP) {
             $scope.array = [];
+
             $scope.sortParamArray = 'setDate';
+            
             $scope.data = {};
-            //called when adding notes
-            $scope.addNote = function (title, text, setDate){
-                baseDB.insert(title, text, setDate);
-            }
-            //called when changing notes
-            $scope.updateNote = function(title, text, setDate, id){
-                $scope.note = noteUP.getNote(title, text, setDate, id);
-                baseDB.update(title, text, setDate, id);
-                $scope.array = baseDB.select();
-            }
-
-            $scope.initNotes = function(){
-                $scope.array = arrayH.slice(0);
-            }
-            $scope.setFile = function () {
-                if ($scope.data.typeButton == 'Create')
-                    return 'html-part/createPage.html';
-                else if ($scope.data.typeButton == 'Update')
-                    return 'html-part/updatePage.html';
-                else if ($scope.data.typeButton == 'Delete')
-                    return 'html-part/checkNotes.html';
-                else if ($scope.data.typeButton == 'Reminder')
-                    return 'html-part/reminderPage.html';
-                else if ($scope.data.typeButton == 'headPage') {
-                    return 'html-part/headPage.html';
+            //region of changing  the status of notes & database
+                //called when adding notes
+                $scope.addNote = function (title, text, setDate){
+                    baseDB.insert(title, text, setDate);
                 }
-                else
-                    return 'html-part/headPage.html';
-            };
+                //called when changing notes
+                $scope.updateNote = function(title, text, setDate, id){
+                    $scope.note = noteUP.getNote(title, text, setDate, id);
+                    baseDB.update(title, text, setDate, id);
+                    // $scope.array = baseDB.select();
+                }
 
-            $scope.onBackKeyDown = function () {
-                $scope.data.typeButton = $scope.popHistory();
-            };
-            //called when loading database
-            loadNote = function () {
-                $scope.$apply(function () {
+                $scope.initNotes = function(){
                     $scope.array = arrayH.slice(0);
-                });
-            };
+                }
+                
+                //called when loading database
+                loadNote = function () {
+                    $scope.$apply(function () {
+                        $scope.initNotes();
+                    });
+                };
+            //endregion
 
-            $scope.arrayDeleted = [];
+            //region of deleting notes
+                $scope.arrayDeleted = [];
+                $scope.addToArray = function (id) {
+                    var ind = $scope.arrayDeleted.indexOf(id);
+                    if (ind === -1)
+                        $scope.arrayDeleted.push(id);
+                    else
+                        $scope.arrayDeleted.splice(ind, 1);
+                }
+                //Delete checked notes
+                $scope.removeNotes = function () {
+                    $scope.arrayDeleted.forEach(function(item){
+                        baseDB.delete(item);
+                    })
+                    $scope.arrayDeleted = [];
+                }
+            //endregion
 
-            $scope.arrayHisty = ['headPage'];
-
-            $scope.viewDate = function (date) {
-                if (date === null || undefined || isNaN(date))
-                    return "";
-                else 
-                    return new Date(date);
-            }
-
-            $scope.current_date = $scope.viewDate(new Date());
-
+            //region view
+                $scope.viewDate = function (date) {
+                    if (date === null || undefined || isNaN(date))
+                        return "";
+                    else 
+                        return new Date(date);
+                }
+                $scope.current_date = $scope.viewDate(new Date());
+            //endregion
+            
             var current_note;
-
             $scope.updatePage = function (id, title, text, setDate) {
                 current_note = getNoteID(id);
                 $scope.data.typeButton = 'Update';
@@ -201,35 +163,38 @@ angular.module("notesApp")
                 }
             }
 
-            $scope.addToArray = function (id) {
-                var ind = $scope.arrayDeleted.indexOf(id);
-                if (ind === -1)
-                    $scope.arrayDeleted.push(id);
-                else
-                    $scope.arrayDeleted.splice(ind, 1);
-            }
+            // $scope.setFile = function () {
+            //     if ($scope.data.typeButton == 'Create')
+            //         return 'html-part/createPage.html';
+            //     else if ($scope.data.typeButton == 'Update')
+            //         return 'html-part/updatePage.html';
+            //     else if ($scope.data.typeButton == 'Delete')
+            //         return 'html-part/checkNotes.html';
+            //     else if ($scope.data.typeButton == 'Reminder')
+            //         return 'html-part/reminderPage.html';
+            //     else if ($scope.data.typeButton == 'headPage') {
+            //         return 'html-part/headPage.html';
+            //     }
+            //     else
+            //         return 'html-part/headPage.html';
+            // };
 
-            $scope.addToHistory = function (page) {
-                $scope.arrayHisty.push(page);
-            }
+            // $scope.onBackKeyDown = function () {
+            //     $scope.data.typeButton = $scope.popHistory();
+            // };
 
-            $scope.popHistory = function () {
-                if ($scope.arrayHisty.length === 0)
-                    return 'headPage';
-                else {
-                    $scope.arrayHisty.pop();
-                    return $scope.arrayHisty.pop();
-                }
-            }
+            // $scope.arrayHisty = ['headPage'];
 
-            //Delete checked notes
-            $scope.deleteChekedNotes = function () {
-                $scope.arrayDeleted.forEach(function(item){
-                    baseDB.delete(item);
-                    var ind = $scope.array.indexOf(getNoteID(item));
-                    $scope.array.splice(ind, 1);
-                })
+            // $scope.addToHistory = function (page) {
+            //     $scope.arrayHisty.push(page);
+            // }
 
-                $scope.arrayDeleted.splice(0, $scope.arrayDeleted.length);
-            }
+            // $scope.popHistory = function () {
+            //     if ($scope.arrayHisty.length === 0)
+            //         return 'headPage';
+            //     else {
+            //         $scope.arrayHisty.pop();
+            //         return $scope.arrayHisty.pop();
+            //     }
+            // }
         }]);

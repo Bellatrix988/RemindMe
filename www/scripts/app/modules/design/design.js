@@ -4,3 +4,6 @@
 	    	.primaryPalette('green')
 	    	.accentPalette('grey')
 		})
+		.controller('generalDesignCtrl', function($scope){ //МОЖНО СДЕЛАТЬ ДИРЕКТИВУ
+
+		})
