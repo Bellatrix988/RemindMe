@@ -2,9 +2,6 @@ angular.module("notesApp", []);
 angular.module("notesApp")
        .factory('baseDB', function(){
            return {
-                select: function(){
-                    return selectTODO();
-                },
                 insert: function (title, text, setDate) {
                     if(!title)
                         title = text.substring(0, 15) + "...";
@@ -89,7 +86,6 @@ angular.module("notesApp")
                 $scope.updateNote = function(title, text, setDate, id){
                     $scope.note = noteUP.getNote(title, text, setDate, id);
                     baseDB.update(title, text, setDate, id);
-                    // $scope.array = baseDB.select();
                 }
 
                 $scope.initNotes = function(){

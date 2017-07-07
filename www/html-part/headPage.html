@@ -1,5 +1,4 @@
-﻿<!-- ng-controller="notesController" ng-init="initNotes" -->
-<section ng-controller="notesController" ng-init="initNotes()">
+﻿<section ng-controller="notesController" ng-init="initNotes()" ng-cloak>
 <div ng-controller="sidenavCtrl" layout="column">
     <md-toolbar>
           <div class="md-toolbar-tools">
@@ -13,9 +12,6 @@
             <md-button  ng-click="data.typeButton = 'Delete'; addToHistory('Delete')" class="md-fab md-mini" aria-label="delete" ui-sref="delete" data-ui-sref-opts="{reload:true}"> 
               <i class="fa fa-trash" aria-hidden="true"></i>
             </md-button>
-            <!-- <md-button ng-click="data.typeButton = 'Create'; addToHistory('Create')" class="md-fab md-mini" aria-label="create" ui-sref="create">
-              <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-            </md-button> -->
           </div>
     </md-toolbar>
   <section layout="row" flex>
@@ -38,10 +34,6 @@
       </md-content>
     </md-sidenav>
     <md-content flex layout-padding>
-    <div>
-      <p ng-repeat="item in arrayS">{{item}}</p>
-    </div>
-
       <div layout="column" layout-align="top center">
         <center ng-cloak>
             <div ng-switch on="array.length">

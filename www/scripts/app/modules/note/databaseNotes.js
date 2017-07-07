@@ -39,20 +39,6 @@ init = function () {
 
 //region Methods for DataBase
 
-    function selectTODO(){
-        // var res = [];
-        dataBase.transaction(function (tx) {
-            tx.executeSql("SELECT * FROM dbNotes", [], function (tx, result) {
-                for (var i = 0; i < result.rows.length; i++) {
-                    arrayH.push(new Note(result.rows.item(i).ID, result.rows.item(i).title, result.rows.item(i).text, result.rows.item(i).set_date));
-                }
-                console.log("selectTODO RES: ", res);
-                // return res;
-            }, errCallback);
-        });
-
-    }
-
     function insertTODO(title, text, setDate){
         dataBase.transaction(function (tx) {
             tx.executeSql("INSERT INTO dbNotes (title, text, set_date, create_date) VALUES (?,?,?,?)", [title, text, setDate, new Date()]);

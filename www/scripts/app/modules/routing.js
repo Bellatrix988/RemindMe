@@ -14,8 +14,7 @@ routingApp.run(function ($state, $rootScope) {
     $stateProvider
         .state('home', {
             url: '/home',
-            templateUrl: '../../../html-part/headPage.html',
-            controller: 'notesController'
+            templateUrl: '../../../html-part/headPage.html'
         })
 
         .state('create',{

@@ -1,65 +1,29 @@
-﻿<!-- <div ng-controller="notesAddController">
-    <div class="navbar navbar-default navbar-static">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".js-navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <textarea id="header" ng-bind="note_text" ng-model="note_title" placeholder="Заголовок..."></textarea>
+﻿<section ng-controller="notesController" ng-init="initNotes()" ng-cloak>
+    <div ng-controller="BottomSheetExample" layout="column" ng-cloak class="md-inline-form">
+      <md-content layout-padding>
+        <div>
+          <form name="noteForm">
+            <!-- section head -->
+            <div >
+                <!-- input for title -->
+                <md-input-container style="position: relative;" flex="100" class="md-block">
+                  <label>Заголовок</label>
+                  <input ng-bind="note_text" ng-model="note_title">
+                </md-input-container>
+                
             </div>
-        </div>
-        <div class="collapse navbar-collapse js-navbar">
-            <ul class="nav navbar-nav navbar-right">
-                <li ng-click="addNote(note_title,note_text,note_set_date); data.typeButton = 'Reminder'; addToHistory('Reminder')">
-                    <a class="dropdown-toggle" data-toggle="dropdown">
-                        Напоминание
-                    </a>
-                </li>
-                <li ng-click="onBackKeyDown()">
-                    <a class="dropdown-toggle" data-toggle="dropdown">
-                        Отменить
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <textarea id="textBody" ng-model="note_text" ng-minlength="1" placeholder="Что нужно сделать..." autofocus></textarea><br />
-
-    <div class="buttonBottom">
-        <button type="submit" value="save" ng-click="addNote(note_title,note_text,note_set_date); data.typeButton = 'headPage'; addToHistory('headPage')">Сохранить</button>
-        <button ng-click="onBackKeyDown()" value="back">Назад</button>
-    </div>
-</div> -->
-
-
-<div ng-controller="BottomSheetExample" layout="column" ng-cloak class="md-inline-form">
-  <md-content layout-padding>
-    <div>
-      <form name="noteForm">
-        <!-- section head -->
-        <div >
-            <!-- input for title -->
-            <md-input-container style="position: relative;" flex="100" class="md-block">
-              <label>Заголовок</label>
-              <input ng-bind="note_text" ng-model="note_title">
+            <!-- section notes text -->
+            <md-input-container class="md-block">
+              <label>Заметка</label>
+              <textarea id="textBody" ng-model="note_text" ng-minlength="1" placeholder="Что нужно сделать..." autofocus md-maxlength="1000" rows="9" md-select-on-focus></textarea>
             </md-input-container>
-            
+          </form>
         </div>
-        <!-- section notes text -->
-        <md-input-container class="md-block">
-          <label>Заметка</label>
-          <textarea id="textBody" ng-model="note_text" ng-minlength="1" placeholder="Что нужно сделать..." autofocus md-maxlength="1000" rows="9" md-select-on-focus></textarea>
-        </md-input-container>
-      </form>
+        <div class="buttonBottom">
+            <md-button class="md-raised" type="submit" value="save" ng-click="addNote(note_title,note_text,note_set_date)" ui-sref="home">Сохранить</md-button>
+            <md-button class="md-raised" onclick="history.back()" value="back">Назад</md-button>
+            <md-button class="md-primary md-fab md-fab-bottom-right" ng-click="showListBottomSheet()"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></md-button>
+        </div>
+      </md-content>
     </div>
-    <div class="buttonBottom" ng-controller="notesController">
-        <md-button class="md-raised" type="submit" value="save" ng-click="addNote(note_title,note_text,note_set_date)" ui-sref="home">Сохранить</md-button>
-        <!-- ng-click="onBackKeyDown()" -->
-        <md-button class="md-raised" onclick="history.back()" value="back">Назад</md-button>
-        <md-button class="md-primary md-fab md-fab-bottom-right" ng-click="showListBottomSheet()"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></md-button>
-    </div>
-  </md-content>
-</div>
+</section>
