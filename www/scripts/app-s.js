@@ -7,6 +7,9 @@ var routingApp = angular.module('routingApp', ['ui.router']);
 routingApp.controller("updateCtrl",function($stateParams, $scope){
     $scope.note = $stateParams.note;
 })
+routingApp.controller("updateClockCtrl",function($stateParams, $scope){
+    $scope.noteClock = $stateParams.noteClock;
+})
 routingApp.config(function($stateProvider, $urlRouterProvider) {
 
     $urlRouterProvider.otherwise('home');
@@ -31,12 +34,12 @@ routingApp.config(function($stateProvider, $urlRouterProvider) {
             }
         })
 
-        .state('upreminder', {
+        .state('updatereminder', {
             url: '/remider',
-            templateUrl: '../../../html-part/reminderPage.html',
-            controller: 'updateCtrl',
+            templateUrl: '../../../html-part/update__reminder.html',
+            controller: 'updateClockCtrl',
             params:{
-                note: Object
+                noteClock: Object
             }   
         })
 
@@ -56,125 +59,6 @@ routingApp.config(function($stateProvider, $urlRouterProvider) {
         });
 });
 
- angular.module('designApp', ["ngMaterial", "ngAnimate", "ngAria","mdPickers"])
-		.config(function($mdThemingProvider) {
-	  		$mdThemingProvider.theme('default')
-	    	.primaryPalette('green')
-	    	.accentPalette('grey')
-		})
-		.controller('generalDesignCtrl', function($scope){ //МОЖНО СДЕЛАТЬ ДИРЕКТИВУ
-
-		})
-angular.module('designApp')
-       .controller('formCtrl', function($scope) {
-          
-       })
-angular.module('designApp')
-       .controller('reminderCtrl', ['$scope','$mdpDatePicker', '$mdpTimePicker', function($scope, $mdpDatePicker, $mdpTimePicker){
-	       	$scope.currentDate = new Date();
-		  	this.showDatePicker = function(ev) {
-		    	$mdpDatePicker($scope.currentDate, {
-		        targetEvent: ev
-		      }).then(function(selectedDate) {
-		        $scope.currentDate = selectedDate;
-		      });;
-		    };
-		    
-		    this.filterDate = function(date) {
-		      return moment(date).date() % 2 == 0;
-		    };
-		    
-		    this.showTimePicker = function(ev) {
-		    	$mdpTimePicker($scope.currentTime, {
-		        targetEvent: ev
-		      }).then(function(selectedDate) {
-		        $scope.currentTime = selectedDate;
-		      });;
-		    } 
-       }]);
-angular.module('designApp')
-      .controller('sidenavCtrl', function ($scope, $timeout, $mdSidenav) {
-        $scope.toggleLeft = buildToggler('left');
-
-         var imagePath = "./../../../../images/notepadCreate.png";
-        $scope.todos = [
-	      {
-	        icon : imagePath,
-	        text : 'Календарь'
-	      },
-	      {
-	        icon : imagePath,
-	        text : 'Архив'
-	      },
-	      {
-	        icon : imagePath,
-	        text : 'Поиск'
-	      },
-	      {
-	        icon : imagePath,
-	        text : 'Тема'
-	      },
-	      {
-	        icon : imagePath,
-	        text : 'Поддержка'
-	      }
-	    ];
-
-        function buildToggler(componentId) {
-          return function() {
-            $mdSidenav(componentId).toggle();
-          };
-        }
-      });
-angular.module('designApp')
-	.controller('BottomSheetExample', function($scope, $timeout, $mdBottomSheet, $mdToast) {
-	  $scope.alert = '';
-
-	  $scope.showListBottomUpdate = function() {
-	    $scope.alert = '';
-	    $mdBottomSheet.show({
-	      templateUrl: '../../../../html-part/list_toolbar.html',
-	      controller: 'ListBottomUpdateCtrl'
-	    }).then(function(clickedItem) {
-	      $scope.alert = clickedItem['name'] + ' clicked!';
-	    }).catch(function(error) {
-	    });
-	  }
-	  // $scope.showListBottomSheet = function() {
-	  //   $scope.alert = '';
-	  //   $mdBottomSheet.show({
-	  //     templateUrl: '../../../../html-part/list_toolbar.html',
-	  //     controller: 'ListBottomSheetCtrl'
-	  //   }).then(function(clickedItem) {
-	  //     $scope.alert = clickedItem['name'] + ' clicked!';
-	  //   }).catch(function(error) {
-	  //   });
-	  // };
-	})
-	.controller('ListBottomUpdateCtrl', function($scope, $mdBottomSheet) {
-	  $scope.items = [
-	    { name: 'Добавить напоминание', icon: 'fa fa-clock-o', fucClick: "", src: "upreminder({note: note})" },
-	    { name: 'Поставить метку', icon: 'fa fa-tag', fucClick: "", src: "reminder" },
-	    { name: 'Изменить цвет', icon: 'fa fa-paint-brush', fucClick: "", src: "reminder" }
-	  ];
-
-	  $scope.listItemClick = function($index) {
-	    var clickedItem = $scope.items[$index];
-	    $mdBottomSheet.hide(clickedItem);
-	  };
-	})
-	// .controller('ListBottomSheetCtrl', function($scope, $mdBottomSheet) {
-	//   $scope.items = [
-	//     { name: 'Добавить напоминание', icon: 'fa fa-clock-o', fucClick: "", src: "reminder" },
-	//     { name: 'Поставить метку', icon: 'fa fa-tag', fucClick: "", src: "reminder" },
-	//     { name: 'Изменить цвет', icon: 'fa fa-paint-brush', fucClick: "", src: "reminder" }
-	//   ];
-
-	//   $scope.listItemClick = function($index) {
-	//     var clickedItem = $scope.items[$index];
-	//     $mdBottomSheet.hide(clickedItem);
-	//   };
-	// })
 function Note(id, title, text, setDate,createDate) {
     this.id = id;       //id
     this.title = title; //���������
@@ -461,3 +345,122 @@ angular.module("notesApp")
         }
     };
 });
+ angular.module('designApp', ["ngMaterial", "ngAnimate", "ngAria","mdPickers"])
+		.config(function($mdThemingProvider) {
+	  		$mdThemingProvider.theme('default')
+	    	.primaryPalette('green')
+	    	.accentPalette('grey')
+		})
+		.controller('generalDesignCtrl', function($scope){ //МОЖНО СДЕЛАТЬ ДИРЕКТИВУ
+
+		})
+angular.module('designApp')
+       .controller('formCtrl', function($scope) {
+          
+       })
+angular.module('designApp')
+       .controller('reminderCtrl', ['$scope','$mdpDatePicker', '$mdpTimePicker', function($scope, $mdpDatePicker, $mdpTimePicker){
+	       	$scope.currentDate = new Date();
+		  	this.showDatePicker = function(ev) {
+		    	$mdpDatePicker($scope.currentDate, {
+		        targetEvent: ev
+		      }).then(function(selectedDate) {
+		        $scope.currentDate = selectedDate;
+		      });;
+		    };
+		    
+		    this.filterDate = function(date) {
+		      return moment(date).date() % 2 == 0;
+		    };
+		    
+		    this.showTimePicker = function(ev) {
+		    	$mdpTimePicker($scope.currentTime, {
+		        targetEvent: ev
+		      }).then(function(selectedDate) {
+		        $scope.currentTime = selectedDate;
+		      });;
+		    } 
+       }]);
+angular.module('designApp')
+      .controller('sidenavCtrl', function ($scope, $timeout, $mdSidenav) {
+        $scope.toggleLeft = buildToggler('left');
+
+         var imagePath = "./../../../../images/notepadCreate.png";
+        $scope.todos = [
+	      {
+	        icon : imagePath,
+	        text : 'Календарь'
+	      },
+	      {
+	        icon : imagePath,
+	        text : 'Архив'
+	      },
+	      {
+	        icon : imagePath,
+	        text : 'Поиск'
+	      },
+	      {
+	        icon : imagePath,
+	        text : 'Тема'
+	      },
+	      {
+	        icon : imagePath,
+	        text : 'Поддержка'
+	      }
+	    ];
+
+        function buildToggler(componentId) {
+          return function() {
+            $mdSidenav(componentId).toggle();
+          };
+        }
+      });
+angular.module('designApp')
+	.controller('BottomSheetExample', function($scope, $timeout, $mdBottomSheet, $mdToast) {
+	  $scope.alert = '';
+
+	  $scope.showListBottomUpdate = function() {
+	    $scope.alert = '';
+	    $mdBottomSheet.show({
+	      templateUrl: '../../../../html-part/list_toolbar.html',
+	      controller: 'ListBottomUpdateCtrl'
+	    }).then(function(clickedItem) {
+	      $scope.alert = clickedItem['name'] + ' clicked!';
+	    }).catch(function(error) {
+	    });
+	  }
+	  // $scope.showListBottomSheet = function() {
+	  //   $scope.alert = '';
+	  //   $mdBottomSheet.show({
+	  //     templateUrl: '../../../../html-part/list_toolbar.html',
+	  //     controller: 'ListBottomSheetCtrl'
+	  //   }).then(function(clickedItem) {
+	  //     $scope.alert = clickedItem['name'] + ' clicked!';
+	  //   }).catch(function(error) {
+	  //   });
+	  // };
+	})
+	.controller('ListBottomUpdateCtrl', function($scope, $mdBottomSheet) {
+	  $scope.items = [
+	    { name: 'Добавить напоминание', icon: 'fa fa-clock-o', fucClick: "", src: "upreminder({note: note})" },
+	    { name: 'Поставить метку', icon: 'fa fa-tag', fucClick: "", src: "reminder" },
+	    { name: 'Изменить цвет', icon: 'fa fa-paint-brush', fucClick: "", src: "reminder" }
+	  ];
+
+	  $scope.listItemClick = function($index) {
+	    var clickedItem = $scope.items[$index];
+	    $mdBottomSheet.hide(clickedItem);
+	  };
+	})
+	// .controller('ListBottomSheetCtrl', function($scope, $mdBottomSheet) {
+	//   $scope.items = [
+	//     { name: 'Добавить напоминание', icon: 'fa fa-clock-o', fucClick: "", src: "reminder" },
+	//     { name: 'Поставить метку', icon: 'fa fa-tag', fucClick: "", src: "reminder" },
+	//     { name: 'Изменить цвет', icon: 'fa fa-paint-brush', fucClick: "", src: "reminder" }
+	//   ];
+
+	//   $scope.listItemClick = function($index) {
+	//     var clickedItem = $scope.items[$index];
+	//     $mdBottomSheet.hide(clickedItem);
+	//   };
+	// })

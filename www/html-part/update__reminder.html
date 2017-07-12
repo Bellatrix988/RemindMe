@@ -1,0 +1,19 @@
+<md-content id="content" layout="column" flex ng-controller="notesController">
+  <md-content flex layout="column" layout-align="center center" layout-padding>
+    <div layout="row">
+          <p ng-bind="noteClock.title"></p>
+          <div layout-padding>
+              <mdp-date-picker mdp-placeholder="Date" ng-model="noteClock.setDate"></mdp-date-picker>
+          </div>
+          <div layout-padding>
+              <mdp-time-picker class="nativetimepicker" mdp-placeholder="Time" ng-model="noteClock.setDate"></mdp-time-picker>
+          </div>
+        </div>
+  </md-content>
+  <div ng-controller="notesController">
+<!--         <md-button class="md-raised" type="submit" value="save" ng-click="updateNote(MYID,MYnote_title, MYnote_text, MYnote_set_date)" ui-sref="home">Update</md-button>
+        <md-button class="md-raised" type="submit" value="save" ng-click="setNotify(MYID,MYnote_title, MYnote_text, MYnote_set_date)" ui-sref="home">SetNotify</md-button> -->
+        <md-button class="md-raised" ng-click="updateNote(noteClock.title, noteClock.text, noteClock.setDate, noteClock.id)" ui-sref="update({note: noteClock})"  value="back">OK</md-button>
+        <md-button class="md-raised" ui-sref="update({note: noteClock})" onclick="history.back()"  value="back">Назад</md-button>
+    </div>
+</md-content>

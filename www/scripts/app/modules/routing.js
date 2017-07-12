@@ -6,6 +6,9 @@ var routingApp = angular.module('routingApp', ['ui.router']);
 routingApp.controller("updateCtrl",function($stateParams, $scope){
     $scope.note = $stateParams.note;
 })
+routingApp.controller("updateClockCtrl",function($stateParams, $scope){
+    $scope.noteClock = $stateParams.noteClock;
+})
 routingApp.config(function($stateProvider, $urlRouterProvider) {
 
     $urlRouterProvider.otherwise('home');
@@ -30,12 +33,12 @@ routingApp.config(function($stateProvider, $urlRouterProvider) {
             }
         })
 
-        .state('upreminder', {
+        .state('updatereminder', {
             url: '/remider',
-            templateUrl: '../../../html-part/reminderPage.html',
-            controller: 'updateCtrl',
+            templateUrl: '../../../html-part/update__reminder.html',
+            controller: 'updateClockCtrl',
             params:{
-                note: Object
+                noteClock: Object
             }   
         })
 

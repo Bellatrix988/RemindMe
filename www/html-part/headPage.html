@@ -46,7 +46,6 @@
                 </div>
                 <div ng-switch-default>
                     <md-list-item class="md-3-line" ng-repeat="item in array | orderBy:sortParamArray"  ui-sref="update({note: item})">
-                      <p ng-bind="note.title"></p>
                       <div class="md-list-item-text" layout="column">
                             <p width="75%" ng-bind="item.title | limitTo:15"></p>
                             <p width="15%" ng-bind=" viewDate(item.setDate)  |  date:'dd.MM.yyyy' "></p>
