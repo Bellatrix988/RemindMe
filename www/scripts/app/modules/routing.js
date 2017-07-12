@@ -30,6 +30,15 @@ routingApp.config(function($stateProvider, $urlRouterProvider) {
             }
         })
 
+        .state('upreminder', {
+            url: '/remider',
+            templateUrl: '../../../html-part/reminderPage.html',
+            controller: 'updateCtrl',
+            params:{
+                note: Object
+            }   
+        })
+
         .state('help', {
             url: '/help',
             templateUrl: '../../../html-part/headPage.html'

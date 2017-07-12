@@ -13,7 +13,6 @@ angular.module("notesApp")
                 delete: function(id){
                     deleteTODO(id);
                 }
-
            };
        })
        .factory('noteUP', function(){
